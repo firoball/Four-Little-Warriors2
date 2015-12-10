@@ -1,0 +1,56 @@
+# Written by MakeHuman 1.0.2
+version v1.0.2
+tags makehuman
+face head-scale-depth-less-more -0.064000
+face head-diamond 0.298000
+face head-scale-vert-more-less -0.226000
+face head-age-less-more -0.146000
+face head-scale-horiz-less-more 0.096000
+face head-angle-in-out 0.516000
+face head-invertedtriangular 0.315000
+torso torso-trans-vert-down-up -0.096000
+torso torso-scale-depth-decr-incr 1.000000
+torso torso-vshape-less-more 0.064000
+torso torso-trans-depth-forward-backward -0.064000
+torso torso-scale-vert-decr-incr -0.048000
+proxy male1591 d7e4934e-daed-4ad5-a055-18c9cba487dc
+eyes Low-Poly 1cc97a30-85a1-42e6-a9f7-b3e753732baa
+clothesHideFaces True
+armslegs r-lowerarm-scale-vert-decr-incr 1.000000
+armslegs r-upperleg-scale-vert-decr-incr -0.064000
+armslegs l-lowerarm-scale-vert-decr-incr 1.000000
+armslegs r-lowerarm-scale-horiz-decr-incr -0.048000
+armslegs l-upperleg-scale-horiz-decr-incr 0.662000
+armslegs r-upperarm-scale-horiz-decr-incr -0.162000
+armslegs r-upperarm-scale-depth-decr-incr 1.000000
+armslegs l-upperarm-scale-depth-decr-incr 1.000000
+armslegs l-upperarm-scale-vert-decr-incr 1.000000
+armslegs r-upperleg-scale-depth-decr-incr 0.790000
+armslegs l-upperarm-scale-horiz-decr-incr -0.130000
+armslegs l-lowerleg-scale-horiz-decr-incr 0.338000
+armslegs r-upperleg-scale-horiz-decr-incr 0.612000
+armslegs r-lowerarm-scale-depth-decr-incr 1.000000
+armslegs r-lowerleg-scale-depth-decr-incr 1.000000
+armslegs l-lowerleg-scale-depth-decr-incr 1.000000
+armslegs r-upperarm-scale-vert-decr-incr 1.000000
+armslegs l-upperleg-scale-depth-decr-incr 0.790000
+armslegs l-lowerarm-scale-horiz-decr-incr -0.016000
+armslegs l-lowerarm-scale-depth-decr-incr 1.000000
+gendered BreastFirmness 0.500000
+gendered BreastSize 0.500000
+macro Weight 0.234000
+macro Gender 0.613000
+macro Age 0.734000
+macro Height 0.000000
+macro Asian 0.137000
+macro African 0.000000
+macro Caucasian 0.863000
+macro Muscle 1.000000
+macro BodyProportions 0.597000
+measure neckcirc 1.000000
+measure neckheight -0.646000
+background enabled False
+skinMaterial skins/default.mhmat
+material Low-Poly 1cc97a30-85a1-42e6-a9f7-b3e753732baa eyes/materials/brown.mhmat
+skeleton second_life.json
+subdivide False

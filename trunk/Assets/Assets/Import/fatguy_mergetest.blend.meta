@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: 00ac4c57bfaddeb428d9ea42b657f727
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: Bone
+    100002: //RootNode
+    100004: makehuman_002
+    100006: makehuman_male1591_002
+    100008: mAnkleLeft
+    100010: mAnkleRight
+    100012: mChest
+    100014: mCollarLeft
+    100016: mCollarRight
+    100018: mElbowLeft
+    100020: mElbowRight
+    100022: mEyeLeft
+    100024: mEyeRight
+    100026: mFootLeft
+    100028: mFootRight
+    100030: mHead
+    100032: mHipLeft
+    100034: mHipRight
+    100036: mKneeLeft
+    100038: mKneeRight
+    100040: mNeck
+    100042: mPelvis
+    100044: mShoulderLeft
+    100046: mShoulderRight
+    100048: mTorso
+    100050: mWristLeft
+    100052: mWristRight
+    400000: Bone
+    400002: //RootNode
+    400004: makehuman_002
+    400006: makehuman_male1591_002
+    400008: mAnkleLeft
+    400010: mAnkleRight
+    400012: mChest
+    400014: mCollarLeft
+    400016: mCollarRight
+    400018: mElbowLeft
+    400020: mElbowRight
+    400022: mEyeLeft
+    400024: mEyeRight
+    400026: mFootLeft
+    400028: mFootRight
+    400030: mHead
+    400032: mHipLeft
+    400034: mHipRight
+    400036: mKneeLeft
+    400038: mKneeRight
+    400040: mNeck
+    400042: mPelvis
+    400044: mShoulderLeft
+    400046: mShoulderRight
+    400048: mTorso
+    400050: mWristLeft
+    400052: mWristRight
+    4300000: makehuman_male1591_002
+    7400000: Sword
+    7400002: make02_08
+    7400004: make02_08_001
+    7400006: anim
+    7400008: Slam
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: makehuman_male1591_002
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 3
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: anim
+      takeName: make05mirrored
+      firstFrame: -1
+      lastFrame: 499
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: makehuman_002
+        weight: 1
+      - path: makehuman_002/Bone
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft/mAnkleLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft/mAnkleLeft/mFootLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight/mAnkleRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight/mAnkleRight/mFootRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft/mElbowLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft/mElbowLeft/mWristLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight/mElbowRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight/mElbowRight/mWristRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead/mEyeLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead/mEyeRight
+        weight: 1
+      - path: makehuman_male1591_002
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Slam
+      takeName: Default Take
+      firstFrame: 0
+      lastFrame: 248
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: makehuman_002
+        weight: 1
+      - path: makehuman_002/Bone
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft/mAnkleLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft/mAnkleLeft/mFootLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight/mAnkleRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight/mAnkleRight/mFootRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft/mElbowLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft/mElbowLeft/mWristLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight/mElbowRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight/mElbowRight/mWristRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead/mEyeLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead/mEyeRight
+        weight: 1
+      - path: makehuman_male1591_002
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Sword
+      takeName: Default Take
+      firstFrame: 250
+      lastFrame: 499
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: makehuman_002
+        weight: 1
+      - path: makehuman_002/Bone
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft/mAnkleLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipLeft/mKneeLeft/mAnkleLeft/mFootLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight/mAnkleRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mHipRight/mKneeRight/mAnkleRight/mFootRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft/mElbowLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarLeft/mShoulderLeft/mElbowLeft/mWristLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight/mElbowRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mCollarRight/mShoulderRight/mElbowRight/mWristRight
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead/mEyeLeft
+        weight: 1
+      - path: makehuman_002/Bone/mPelvis/mTorso/mChest/mNeck/mHead/mEyeRight
+        weight: 1
+      - path: makehuman_male1591_002
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 3
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human:
+    - boneName: mPelvis
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mHipLeft
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mHipRight
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mKneeLeft
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mKneeRight
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mAnkleLeft
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mAnkleRight
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mTorso
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mChest
+      humanName: Chest
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mNeck
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mHead
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mCollarLeft
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mCollarRight
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mShoulderLeft
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mShoulderRight
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mElbowLeft
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mElbowRight
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mWristLeft
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mWristRight
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mFootLeft
+      humanName: LeftToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: mFootRight
+      humanName: RightToes
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: fatguy_mergetest(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: makehuman_002
+      position: {x: .0221214294, y: 0, z: 0}
+      rotation: {x: -.707106888, y: 0, z: -0, w: .707106769}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: Bone
+      position: {x: -.0221214294, y: -0, z: 0}
+      rotation: {x: .50000006, y: .50000006, z: -.49999994, w: .49999994}
+      scale: {x: 1.00000024, y: 1.00000024, z: 1}
+      transformModified: 1
+    - name: mPelvis
+      position: {x: -6.28286362, y: 1.86264515e-09, z: .101614758}
+      rotation: {x: -4.74152024e-08, y: -.0964880735, z: 4.21468478e-08, w: .995334148}
+      scale: {x: 1, y: .999999642, z: .999999583}
+      transformModified: 1
+    - name: mHipLeft
+      position: {x: .0923998207, y: -.721277714, z: -.121626362}
+      rotation: {x: -.0406827517, y: -.99637562, z: .0497765318, w: .0557029136}
+      scale: {x: 1.00000048, y: 1.00000024, z: .99999994}
+      transformModified: 1
+    - name: mKneeLeft
+      position: {x: -2.73014331, y: -4.72329219e-07, z: 5.13575173e-07}
+      rotation: {x: -2.78647917e-07, y: .0708756149, z: -3.3157832e-07, w: .99748522}
+      scale: {x: .999999464, y: .999999404, z: .999999642}
+      transformModified: 1
+    - name: mAnkleLeft
+      position: {x: -2.87571788, y: 2.04420957e-07, z: 4.57095155e-07}
+      rotation: {x: .0693642646, y: .546768904, z: .0155426124, w: -.834260702}
+      scale: {x: .999999821, y: 1, z: 1.00000012}
+      transformModified: 1
+    - name: mFootLeft
+      position: {x: -.932211578, y: 6.01470049e-07, z: 2.56527841e-07}
+      rotation: {x: -1.4123385e-05, y: -.23285906, z: 1.89129867e-08, w: .972510576}
+      scale: {x: 1.0000006, y: 1, z: .999999583}
+      transformModified: 1
+    - name: mHipRight
+      position: {x: .0924864337, y: .721102774, z: -.121643342}
+      rotation: {x: -.040926639, y: .996608198, z: .045563478, w: -.0549658835}
+      scale: {x: 1.00000012, y: 1.00000012, z: .999999285}
+      transformModified: 1
+    - name: mKneeRight
+      position: {x: -2.69458866, y: 2.06756397e-07, z: 8.08103437e-07}
+      rotation: {x: -2.64592217e-07, y: .0710516945, z: -2.64992622e-07, w: .997472644}
+      scale: {x: .99999994, y: 1, z: 1.00000012}
+      transformModified: 1
+    - name: mAnkleRight
+      position: {x: -2.91095567, y: 1.49503092e-06, z: 6.69187045e-07}
+      rotation: {x: .063613832, y: -.546363711, z: .0139798932, w: .835011721}
+      scale: {x: 1.00000012, y: 1.00000012, z: 1.00000024}
+      transformModified: 1
+    - name: mFootRight
+      position: {x: -.932267427, y: -5.58967521e-08, z: 9.28493648e-07}
+      rotation: {x: -1.26480234e-06, y: -.232848763, z: -7.36250115e-07, w: .97251296}
+      scale: {x: 1.00000095, y: .99999994, z: 1}
+      transformModified: 1
+    - name: mTorso
+      position: {x: -.980407, y: 2.44002081e-08, z: 1.2106149e-07}
+      rotation: {x: 2.38447573e-08, y: -.0636071116, z: -3.3114862e-08, w: .997975051}
+      scale: {x: 1, y: 1.00000024, z: 1.00000012}
+      transformModified: 1
+    - name: mChest
+      position: {x: -.467884988, y: -1.99825028e-08, z: -3.38914191e-07}
+      rotation: {x: -3.75017528e-08, y: .250651717, z: 3.62130805e-08, w: .968077421}
+      scale: {x: .999999762, y: .999999762, z: .999999642}
+      transformModified: 1
+    - name: mCollarLeft
+      position: {x: -1.87519133, y: -.180852756, z: .467922717}
+      rotation: {x: -.451906294, y: -.675347388, z: .374750644, w: .446372688}
+      scale: {x: .999999762, y: .999999881, z: .999999821}
+      transformModified: 1
+    - name: mShoulderLeft
+      position: {x: -1.14126039, y: -1.07366793e-06, z: 3.87860791e-06}
+      rotation: {x: .714397967, y: .13274166, z: .0854021385, w: .681704938}
+      scale: {x: 1.00000072, y: .99999994, z: 1.00000048}
+      transformModified: 1
+    - name: mElbowLeft
+      position: {x: -1.56019747, y: -1.77860306e-06, z: -7.59986335e-07}
+      rotation: {x: -.00814100169, y: .0268251207, z: -.020668596, w: .999393344}
+      scale: {x: .999999881, y: .999999881, z: .999999881}
+      transformModified: 1
+    - name: mWristLeft
+      position: {x: -1.58671188, y: 6.20646574e-07, z: 3.58852049e-07}
+      rotation: {x: .653244317, y: .130038187, z: .0568889603, w: .743724167}
+      scale: {x: 1.00000012, y: .999999821, z: 1.00000012}
+      transformModified: 1
+    - name: mCollarRight
+      position: {x: -1.8751924, y: .180853114, z: .467922807}
+      rotation: {x: -.451906145, y: .675347447, z: .374750614, w: -.446372658}
+      scale: {x: .999999523, y: .999999583, z: .999999881}
+      transformModified: 1
+    - name: mShoulderRight
+      position: {x: -1.14125979, y: 2.66119599e-07, z: -1.00468424e-06}
+      rotation: {x: -.714151561, y: .132704616, z: -.0854574442, w: .681963444}
+      scale: {x: 1.00000024, y: 1.00000024, z: 1.0000006}
+      transformModified: 1
+    - name: mElbowRight
+      position: {x: -1.54753101, y: -2.73965316e-06, z: -9.05562615e-07}
+      rotation: {x: .00814613048, y: .0268377494, z: .0206761248, w: .999392807}
+      scale: {x: .999999762, y: 1, z: 1.00000048}
+      transformModified: 1
+    - name: mWristRight
+      position: {x: -1.56951845, y: -1.61998923e-06, z: 3.47529112e-06}
+      rotation: {x: .653611839, y: -.129891634, z: .0572618283, w: -.743398249}
+      scale: {x: .999999821, y: .999999762, z: 1.0000006}
+      transformModified: 1
+    - name: mNeck
+      position: {x: -2.31307077, y: 1.11149696e-07, z: 3.06664134e-07}
+      rotation: {x: -1.59561537e-08, y: -.116495401, z: -4.43378632e-08, w: .993191242}
+      scale: {x: 1.00000048, y: 1.00000024, z: 1.00000024}
+      transformModified: 1
+    - name: mHead
+      position: {x: -.522679627, y: -1.93694429e-08, z: 2.78101083e-07}
+      rotation: {x: 3.08363219e-08, y: .0251007024, z: 5.9259996e-08, w: .99968493}
+      scale: {x: .999999881, y: .999999881, z: .99999994}
+      transformModified: 1
+    - name: mEyeLeft
+      position: {x: -.202490166, y: -.207931206, z: .77829802}
+      rotation: {x: -.621453404, y: -.381224781, z: .553698599, w: -.402344733}
+      scale: {x: .999999344, y: .999999344, z: .999999583}
+      transformModified: 1
+    - name: mEyeRight
+      position: {x: -.202491075, y: .207930967, z: .77829814}
+      rotation: {x: -.621485472, y: .381184667, z: .55372107, w: .402302206}
+      scale: {x: .999999821, y: 1.0000006, z: .999999702}
+      transformModified: 1
+    - name: makehuman_male1591_002
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: Bone
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 3
+  userData: 

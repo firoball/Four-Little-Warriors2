@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{ABC3255D-1BCF-9732-5D40-033F041BD389}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_5_1_2;UNITY_5_1;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_LICENSE;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_EDITOR_METRICS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>D:/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>D:/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Scripts\Attributes\ShowOnlyAttribute.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Abstract\CollectableItemContainer.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Abstract\ObjectEventManager.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\AnimationWrapper.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\CanvasCameraScale.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\CollectableItem.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\CollectableItemAnimation.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\DamageDealer.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\DebugText.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\EditorMarker.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\EventSubscription.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\FixRotation.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\HudAttributeDisplay.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\HudChatLog.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\HudChatMessage.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\HudPositionTracker.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\JumpParticles.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Local\LocalManager.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Local\LocalPlayerManager.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\NetClPlayerManager.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\NetStreamer.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\NetSvPlayerManager.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\ObjectSpawnPoint.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerAttributes.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerCamera.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerEvents.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerIdentity.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerInput.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerMovement.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerSpawnPoint.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\PlayerView.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Projectile.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\ProjectileAnimation.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\RunParticles.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Singletons\ChatClient.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Singletons\ChatServer.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Singletons\HudConfiguration.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Singletons\LagCompensator.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Singletons\NetManager.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\Singletons\NetStarter.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\SpawnHandler.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\TrapFireBeam.cs" />
+     <Compile Include="Assets\Scripts\Behaviours\TriggerSwitch.cs" />
+     <Compile Include="Assets\Scripts\Classes\ChatMessage.cs" />
+     <Compile Include="Assets\Scripts\Classes\Static\ExtendedMsgType.cs" />
+     <Compile Include="Assets\Scripts\Classes\Static\PlayerManager.cs" />
+     <Compile Include="Assets\Scripts\Classes\Static\Settings.cs" />
+     <Compile Include="Assets\Scripts\Enums\AttackTypes.cs" />
+     <Compile Include="Assets\Scripts\Enums\Attributes.cs" />
+     <Compile Include="Assets\Scripts\Enums\ChatMode.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IAttachableEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IAttributeEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IChatInputEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IChatLogEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IObjectEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IStartupEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Structs\ClientState.cs" />
+     <Compile Include="Assets\Scripts\Structs\CollectableProperties.cs" />
+     <Compile Include="Assets\Scripts\Structs\InputData.cs" />
+     <Compile Include="Assets\Scripts\Structs\NetKeyState.cs" />
+     <Compile Include="Assets\Scripts\Structs\PlayerProperties.cs" />
+     <Compile Include="Assets\Scripts\Structs\ServerState.cs" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+ <HintPath>D:/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{56E48F6C-B2D4-26C2-270F-F3ACD5C7E2E0}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{358DE3C0-6A37-5F0B-16C8-2337B247C458}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
