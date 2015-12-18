@@ -38,16 +38,6 @@ public class Projectile : ObjectEventManager
 		m_projectileAnimation = GetComponent<ProjectileAnimation>();
 		m_speed = Mathf.Max (m_speed, 0.01f);
 		m_lifeTime = m_attackRange / m_speed;
-		if (m_materials.Length > 0)
-		{
-			int index = Math.Min(m_level, m_materials.Length);
-			Renderer renderer = GetComponent<Renderer>();
-			if (renderer != null)
-			{
-				renderer.material = m_materials[index];
-			}
-		}
-
 	}
 
 	void Update () 
@@ -127,6 +117,8 @@ public class Projectile : ObjectEventManager
 			name += " (deactivated)";
 			gameObject.SetActive(false);
 		}
+		Debug.Log(name + " "+m_level);
+		SetupColor();
 		allowClientEvents = false; //server spawned object. never react on client side events
 	}
 
@@ -152,6 +144,20 @@ public class Projectile : ObjectEventManager
 			}
 		}
 		m_level = level;
+		SetupColor(); //setup for local projectiles and server
+	}
+
+	private void SetupColor()
+	{
+		if (m_materials.Length > 0)
+		{
+			int index = Math.Min(m_level, m_materials.Length);
+			Renderer renderer = GetComponent<Renderer>();
+			if (renderer != null)
+			{
+				renderer.material = m_materials[index];
+			}
+		}
 	}
 
 	private void TriggerCollision()

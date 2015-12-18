@@ -61,10 +61,12 @@ public class NetStreamer : NetworkBehaviour
 	private void EncodeSerialize(NetworkWriter writer, ServerState state)
 	{
 		int id = state.messageId;
+		bool inhibit = state.inhibitReconciliation;
 		int input = state.inputData;
 
 		//TODO: compress
 		writer.Write (id);
+		writer.Write (inhibit);
 		writer.Write (input);
 		PlayerProperties properties = state.properties;
 		properties.NetworkSerialize(writer);
@@ -74,13 +76,15 @@ public class NetStreamer : NetworkBehaviour
 	{
 		int id = 0;
 		int input = 0;
+		bool inhibit = false;
 
 		id = reader.ReadInt32();
+		inhibit = reader.ReadBoolean();
 		input = reader.ReadInt32();
 		PlayerProperties properties = new PlayerProperties();
 		properties.NetworkDeserialize(reader);
 
-		ServerState state = new ServerState(id, properties, input);
+		ServerState state = new ServerState(id, properties, input, inhibit);
 
 		return state;
 	}

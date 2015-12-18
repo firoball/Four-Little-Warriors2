@@ -37,11 +37,10 @@ public class NetSvPlayerManager : NetworkBehaviour
 	
 	void FixedUpdate ()
 	{
-		if (!isServer)
+		if (!isServer || (isServer && isClient))
 		{
 			return;
 		}
-		
 		NetKeyState keyState;
 		while(m_pendingInputs.Count > 0)
 		{
@@ -59,7 +58,9 @@ public class NetSvPlayerManager : NetworkBehaviour
 			{
 				m_sendBuffer.RemoveAt(0);
 			}
-			m_sendBuffer.Add (new ServerState(m_messageId, properties, keyState.inputData));
+			//pushing the player is not predicted - disable server reconciliation as long as pushing is active
+			if (properties.isPushed) Debug.Log("INHPUSH");
+			m_sendBuffer.Add (new ServerState(m_messageId, properties, keyState.inputData, properties.isPushed));
 			
 			LagCompensator.Register(gameObject);
 		}

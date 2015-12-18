@@ -12,6 +12,7 @@ public abstract class ObjectEventManager : NetworkBehaviour, IObjectEventTarget
 	public bool ignoreParent = false;
 	public bool destroyOnPositiveResult = false;
 	public bool allowClientEvents = false;
+	public bool disableRpcCalls = false;
 	public float destroyDelay = 0.0f;
 
 	private bool m_isTriggered = false;
@@ -39,7 +40,7 @@ public abstract class ObjectEventManager : NetworkBehaviour, IObjectEventTarget
 		bool result = OnEventTrigger(collider);
 		if (result)
 		{
-			if (isServer)
+			if (isServer && !disableRpcCalls)
 			{
 				RpcOnRemoteEventTrigger();
 			}
@@ -74,7 +75,7 @@ public abstract class ObjectEventManager : NetworkBehaviour, IObjectEventTarget
 		bool result = OnEventCollision(collision);
 		if (result)
 		{
-			if (isServer)
+			if (isServer && !disableRpcCalls)
 			{
 				RpcOnRemoteEventCollision();
 			}
@@ -105,7 +106,7 @@ public abstract class ObjectEventManager : NetworkBehaviour, IObjectEventTarget
 		bool result = OnEventShot(collider);
 		if (result)
 		{
-			if (isServer)
+			if (isServer && !disableRpcCalls)
 			{
 				RpcOnRemoteEventShot();
 			}
@@ -136,7 +137,7 @@ public abstract class ObjectEventManager : NetworkBehaviour, IObjectEventTarget
 		bool result = OnEventUsed(collider);
 		if (result)
 		{
-			if (isServer)
+			if (isServer && !disableRpcCalls)
 			{
 				RpcOnRemoteEventUsed();
 			}

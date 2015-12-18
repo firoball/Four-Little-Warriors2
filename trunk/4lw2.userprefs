@@ -2,22 +2,17 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Behaviours\PlayerMovement.cs">
     <Files>
-      <File FileName="Assets\Scripts\Behaviours\JumpParticles.cs" Line="33" Column="38" />
-      <File FileName="Assets\Scripts\Behaviours\NetSvPlayerManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\ObjectSpawnPoint.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\ProjectileAnimation.cs" Line="34" Column="4" />
-      <File FileName="Assets\Scripts\Behaviours\PlayerIdentity.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\NetClPlayerManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\Singletons\NetManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\Projectile.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Behaviours\DamageDealer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\PlayerEvents.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\PlayerAttributes.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\PlayerMovement.cs" Line="110" Column="27" />
-      <File FileName="Assets\Scripts\Behaviours\HudAttributeDisplay.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\RunParticles.cs" Line="11" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\PlayerInput.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Behaviours\Abstract\ObjectEventManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Behaviours\PlayerIdentity.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Behaviours\Projectile.cs" Line="147" Column="57" />
+      <File FileName="Assets\Scripts\Behaviours\PlayerMovement.cs" Line="130" Column="6" />
+      <File FileName="Assets\Scripts\Behaviours\PlayerEvents.cs" Line="66" Column="4" />
+      <File FileName="Assets\Scripts\Structs\PlayerProperties.cs" Line="39" Column="7" />
+      <File FileName="Assets\Scripts\Structs\ServerState.cs" Line="18" Column="34" />
+      <File FileName="Assets\Scripts\Behaviours\NetClPlayerManager.cs" Line="196" Column="9" />
+      <File FileName="Assets\Scripts\Behaviours\NetSvPlayerManager.cs" Line="62" Column="50" />
+      <File FileName="Assets\Scripts\Behaviours\PlayerAttributes.cs" Line="215" Column="5" />
+      <File FileName="Assets\Scripts\Behaviours\Abstract\ObjectEventManager.cs" Line="144" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

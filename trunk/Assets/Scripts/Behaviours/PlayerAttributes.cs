@@ -212,7 +212,7 @@ public class PlayerAttributes : CollectableItemContainer
 
 	private void DeserializeDataStream(string dataStream)
 	{
-		Debug.Log("Deserialize: "+name);
+		//Debug.Log("Deserialize: "+name);
 		//each attribute requires 2 byte
 		if (dataStream.Length != 2 * attributes.Length)
 		{

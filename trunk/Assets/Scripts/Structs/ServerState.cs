@@ -6,14 +6,16 @@ public struct ServerState
 	private const int invalidMessageId = 0;
 
 	public int messageId;
+	public bool inhibitReconciliation;
 	public PlayerProperties properties;
 	public int inputData;
 
-	public ServerState(int id, PlayerProperties plProperties, int input)
+	public ServerState(int id, PlayerProperties plProperties, int input, bool inhibit)
 	{
 		messageId = id;
 		properties = plProperties;
 		inputData = input;
+		inhibitReconciliation = inhibit;
 	}
 
 	public void Invalidate()

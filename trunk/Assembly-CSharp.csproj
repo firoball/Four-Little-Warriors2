@@ -63,8 +63,6 @@
      <Compile Include="Assets\Scripts\Behaviours\HudChatMessage.cs" />
      <Compile Include="Assets\Scripts\Behaviours\HudPositionTracker.cs" />
      <Compile Include="Assets\Scripts\Behaviours\JumpParticles.cs" />
-     <Compile Include="Assets\Scripts\Behaviours\Local\LocalManager.cs" />
-     <Compile Include="Assets\Scripts\Behaviours\Local\LocalPlayerManager.cs" />
      <Compile Include="Assets\Scripts\Behaviours\NetClPlayerManager.cs" />
      <Compile Include="Assets\Scripts\Behaviours\NetStreamer.cs" />
      <Compile Include="Assets\Scripts\Behaviours\NetSvPlayerManager.cs" />

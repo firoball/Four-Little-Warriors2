@@ -10,6 +10,7 @@ public struct PlayerProperties
 	public bool jumpReady;
 	public float jumpTimer;
 	public bool isGrounded;
+	public bool isPushed;
 
 	//transform copy
 	public Vector3 position;
@@ -22,6 +23,7 @@ public struct PlayerProperties
 
 		if (
 			(props1.jumpReady != props2.jumpReady) ||
+			(props1.isPushed != props2.isPushed) ||
 			(props1.isGrounded != props2.isGrounded) ||
 			(Mathf.Abs(props1.jumpTimer - props2.jumpTimer) > 0.1f) ||
 			(deltaPos.sqrMagnitude > (0.1f * 0.1f)) ||
@@ -30,8 +32,8 @@ public struct PlayerProperties
 		{
 			Debug.Log("pos "+props1.position+"/"+props2.position+" rot "
 			          +props1.rotation.eulerAngles+"/"+props2.rotation.eulerAngles);
-			Debug.Log("dpos "+deltaPos.sqrMagnitude+" drot "+deltaRot.sqrMagnitude
-			          + " jt "+Mathf.Abs(props1.jumpTimer - props2.jumpTimer));
+			/*Debug.Log("dpos "+deltaPos.sqrMagnitude+" drot "+deltaRot.sqrMagnitude
+			          + " jt "+Mathf.Abs(props1.jumpTimer - props2.jumpTimer));*/
 			return true;
 		}
 		else
@@ -75,6 +77,7 @@ public struct PlayerProperties
 	{
 		int hash = 13;
 		hash = (hash * 7) + jumpReady.GetHashCode();
+		hash = (hash * 7) + isPushed.GetHashCode();
 		hash = (hash * 7) + isGrounded.GetHashCode();
 		hash = (hash * 7) + jumpTimer.GetHashCode();
 		hash = (hash * 7) + position.GetHashCode();
@@ -88,6 +91,7 @@ public struct PlayerProperties
 		writer.Write (position);
 		writer.Write (rotation.eulerAngles);
 		writer.Write (jumpReady);
+		writer.Write (isPushed);
 		writer.Write (isGrounded);
 		writer.Write (jumpTimer);
 	}
@@ -97,6 +101,7 @@ public struct PlayerProperties
 		position = reader.ReadVector3();
 		rotation = Quaternion.Euler(reader.ReadVector3());
 		jumpReady = reader.ReadBoolean();
+		isPushed = reader.ReadBoolean();
 		isGrounded = reader.ReadBoolean();
 		jumpTimer = reader.ReadSingle();
 	}

@@ -24,9 +24,16 @@ public class PlayerMovement : MonoBehaviour
 	private CharacterController m_controller;
 	private Transform m_launcher;
 	private PlayerAttributes m_attributes;
+	private float m_pushTimer;
+	private Vector3 m_pushDirection;
+	private Vector3 m_pushPosition;
+	private bool m_pushRequested;
 
 	void Awake()
 	{
+		m_pushTimer = 0.0f;
+		m_pushDirection = Vector3.zero;
+		m_pushRequested = false;
 		m_controller = gameObject.GetComponent<CharacterController>();
 		m_attributes = gameObject.GetComponent<PlayerAttributes>();
 		m_launcher = transform.Find("ProjectileLauncher");
@@ -43,15 +50,17 @@ public class PlayerMovement : MonoBehaviour
 		m_properties.position = transform.position;
 		m_properties.rotation = transform.rotation;
 		m_properties.jumpReady = false;
+		m_properties.isPushed = false;
+		m_properties.isGrounded = false;
 		m_properties.jumpTimer = 0.0f;
 	}
 
-	private float ProcessJump(float jump, float timeStep)
+	private float ProcessJump(float jump, bool isSliding, float timeStep)
 	{
 		float ret;
 
 		//allow jumping only after jump button release, avoid perma-hopping
-		if(jump <= 0.0f)
+		if(jump <= 0.0f && !isSliding)
 		{
 			m_properties.jumpReady = true;
 		}
@@ -81,57 +90,100 @@ public class PlayerMovement : MonoBehaviour
 		return ret;
 	}
 
-	public Vector3 NORMAL;
-	public void ProcessInputs(InputData inputData, float timeStep)
+	private bool ProcessSliding(out Vector3 slideDirection, float run)
 	{
-		float jump = ProcessJump(inputData.jump, timeStep);
-		float run = Mathf.Max(1.0f, inputData.run * runMultiplier);
-		byte speedBonus = m_attributes.GetValue(Attributes.SPEED);
-		float speedMultiplier = 1.0f + 0.1f * Convert.ToSingle(speedBonus);
-
-		transform.Rotate(0, inputData.motionH * sensitivityX * timeStep, 0);
-
-		Vector3 moveDirection = transform.rotation * new Vector3(
-			0.0f, 
-			jump - fallSpeed, 
-			inputData.motionV * walkSpeed * run * speedMultiplier
-			);
-
-//		m_controller.Move(moveDirection * timeStep);
 		RaycastHit hit;
-//		if (Physics.Raycast(transform.position, new Vector3(transform.position.x, transform.position.y-200, transform.position.z), out hit))
 		Vector3 colliderSpherePos = transform.position + m_controller.center;
 		colliderSpherePos.y += m_controller.radius - m_controller.height * 0.5f;
 		if (Physics.SphereCast(colliderSpherePos, m_controller.radius, Vector3.down, out hit, 200.0f))
 		{
-			NORMAL = hit.normal;
 			if (m_controller.isGrounded || m_properties.jumpTimer > 0.0f)
 			{
 				if (hit.normal.y < 0.5f)
 				{
 					Vector3 tangent = Vector3.Cross(hit.normal, Vector3.up);
 					Vector3 down = Vector3.Cross(hit.normal, tangent);
-					Debug.Log(hit.normal+" "+tangent+" "+down);
-					m_controller.Move(down * slideSpeed * run * timeStep);
+					slideDirection = down * slideSpeed * run;
+					return true;
 				}
 			}
 		}
-		m_controller.Move(moveDirection * timeStep);
-		m_properties.isGrounded = m_controller.isGrounded;
+		slideDirection = Vector3.zero;
+		return false;
 	}
 
-/*	void OnControllerColliderHit(ControllerColliderHit hit) 
+	private void ProcessPush(float timeStep)
 	{
-	}*/
-	private bool lastAttack = false;
-	private bool lastUse = false;
+		/* pushing has problems as movement is disabled while pushing.
+		 * the push event itself however finishes early on the server, as client recieved event via RPC
+		 * whiel movement on client is stilllocked, it is already unlocked on the server, and we'll get
+		 * a position jump.
+		 * possible solution: enable/disable feature for PlayerInput which is triggered from ProcessPush()
+		 */
+		if (m_pushRequested)
+		{
+			/*if (m_pushPosition != Vector3.zero)
+			{
+				transform.position = m_pushPosition;
+				m_pushPosition = Vector3.zero;
+			}*/
+			//Debug.Log("dothepush");
+			m_pushTimer -= timeStep;
+			if (m_pushTimer <= 0.0f)
+			{
+				m_pushDirection = Vector3.zero;
+			}
+			//add some idle time
+			if (m_pushTimer <= -0.2f)
+			{
+				m_pushTimer = 0.0f;
+				m_pushRequested = false;
+			}
+		}
+		m_properties.isPushed = m_pushRequested;
+	}
+
+	public void ProcessInputs(InputData inputData, float timeStep)
+	{
+		ProcessPush(timeStep);
+		float run = Mathf.Max(1.0f, inputData.run * runMultiplier);
+		Vector3 slideDirection;
+		bool sliding = ProcessSliding(out slideDirection, run);
+
+		Vector3 moveDirection;
+		if (!m_properties.isPushed)
+		{
+			//Debug.Log ("move "+m_properties.isPushed);
+			float jump = ProcessJump(inputData.jump, sliding, timeStep);
+			byte speedBonus = m_attributes.GetValue(Attributes.SPEED);
+			float speedMultiplier = 1.0f + 0.1f * Convert.ToSingle(speedBonus);
+
+			transform.Rotate(0, inputData.motionH * sensitivityX * timeStep, 0);
+
+			moveDirection = transform.rotation * new Vector3(
+				0.0f, 
+				jump - fallSpeed, 
+				inputData.motionV * walkSpeed * run * speedMultiplier
+				);
+		}
+		else
+		{
+			moveDirection = new Vector3(0.0f, -fallSpeed, 0.0f);
+		}
+		m_controller.Move((moveDirection + slideDirection + m_pushDirection) * timeStep);
+		m_properties.isGrounded = m_controller.isGrounded;
+		if (m_properties.isPushed) Debug.Log(transform.position);
+	}
+
+	private bool m_lastAttack = false;
+	private bool m_lastUse = false;
 
 	private bool editorDebugdraw = false;
 	private Vector3 fwd;
 	private Vector3 pos;
 	void OnDrawGizmos()
 	{
-		if (lastAttack)
+		if (m_lastAttack)
 		{
 			fwd = transform.TransformDirection(Vector3.forward);
 			pos = GetComponent<Collider>().bounds.center;
@@ -160,11 +212,11 @@ public class PlayerMovement : MonoBehaviour
 	public void ProcessActions(InputData inputData)
 	{
 		RaycastHit hit;
-		if (!lastAttack)
+		if (!m_lastAttack)
 		{
 			if (inputData.attack > 0.0f)
 			{
-				lastAttack = true;
+				m_lastAttack = true;
 				Vector3 pos = GetComponent<Collider>().bounds.center;
 				Vector3 fwd = transform.TransformDirection(Vector3.forward);
 				if (Physics.SphereCast(pos, 2.0f, fwd, out hit, 4.0f)) //TODO: use real attack range
@@ -200,7 +252,7 @@ public class PlayerMovement : MonoBehaviour
 		{
 			if (inputData.attack <= 0.0f)
 			{
-				lastAttack = false;
+				m_lastAttack = false;
 			}
 		}
 	}
@@ -332,4 +384,16 @@ public class PlayerMovement : MonoBehaviour
 		return m_properties;
 	}
 
+	public void OnPush(Vector3 direction, Vector3 position, float duration)
+	{
+		if (!m_pushRequested)
+		{
+			//Debug.Log ("pushed "+ direction);
+			m_pushRequested = true;
+			m_pushDirection = direction;
+			m_pushPosition = position;
+			m_pushTimer = Mathf.Max(0.0f, duration);
+		}
+	}
+	
 }

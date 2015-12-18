@@ -84,11 +84,12 @@ public class NetClPlayerManager : NetworkBehaviour
 				ClientState cs = m_pendingStates[m_pendingStates.Count - 1];
 				m_movement.SetProperties(cs.properties);
 			}
-			m_movement.ProcessInputs(m_input.GetInputData(), Time.fixedDeltaTime);
-			if (!isServer)
+//			m_movement.ProcessInputs(m_input.GetInputData(), Time.fixedDeltaTime);
+			if (!isServer || (isServer && isClient))
 			{
 				m_movement.ProcessActions(m_input.GetInputData()); //local prediction of actions
 			}
+			m_movement.ProcessInputs(m_input.GetInputData(), Time.fixedDeltaTime);
 
 			//send key state to server
 			if (connectionToServer.isReady && m_streamer != null)
@@ -121,6 +122,7 @@ public class NetClPlayerManager : NetworkBehaviour
 			{
 				m_pendingStates.RemoveAt(0);
 			}
+
 			ClientState clientState = new ClientState(keyState, m_movement.GetProperties());
 			m_pendingStates.Add(clientState);
 
@@ -185,13 +187,21 @@ public class NetClPlayerManager : NetworkBehaviour
 				//remove all old input states but the newest two - they are required for interpolation
 				while ((m_pendingStates.Count > 2) && (serverState.messageId >= m_pendingStates[0].keyState.messageId))
 				{
-					//update position with server data
+/*					if (
+						(serverState.messageId == m_pendingStates[0].keyState.messageId) &&
+						serverState.inhibitReconciliation
+						)
+					{
+						Debug.Log("inhibited");
+					}*/
+						//update position with server data
 					if (
 						(serverState.messageId == m_pendingStates[0].keyState.messageId) &&
+						!serverState.inhibitReconciliation &&
 						(serverState.properties != m_pendingStates[0].properties)
 					 )
 					{
-						Debug.Log ("update pos " + serverState.messageId + " " + m_pendingStates[0].keyState.messageId);
+						//Debug.Log ("update pos " + serverState.messageId + " " + m_pendingStates[0].keyState.messageId);
 						m_movement.SetProperties(serverState.properties);
 						m_pendingStates.RemoveAt(0);
 						//re-apply all remaining states
