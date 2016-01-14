@@ -46,6 +46,19 @@ public class ObjectSpawnPoint : MonoBehaviour
 		{
 			m_totalWeight += properties.weight;
 		}
+		//no other scripts please
+		MonoBehaviour[] behaviours = GetComponents<MonoBehaviour>();
+		foreach (MonoBehaviour behaviour in behaviours)
+		{
+			if (
+				behaviour.GetType() != typeof(ObjectSpawnPoint) &&
+				behaviour.GetType() != typeof(NetworkIdentity) &&
+				behaviour.GetType() != typeof(EditorMarker)
+				)
+			{
+				Destroy (behaviour);
+			}
+		}
 	}
 
 	void Start()

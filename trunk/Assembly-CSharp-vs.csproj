@@ -99,6 +99,7 @@
      <Compile Include="Assets\Scripts\Interfaces\IChatInputEventTarget.cs" />
      <Compile Include="Assets\Scripts\Interfaces\IChatLogEventTarget.cs" />
      <Compile Include="Assets\Scripts\Interfaces\IObjectEventTarget.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\IPushEventTarget.cs" />
      <Compile Include="Assets\Scripts\Interfaces\IStartupEventTarget.cs" />
      <Compile Include="Assets\Scripts\Structs\ClientState.cs" />
      <Compile Include="Assets\Scripts\Structs\CollectableProperties.cs" />

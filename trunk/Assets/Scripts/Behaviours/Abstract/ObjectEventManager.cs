@@ -22,6 +22,10 @@ public abstract class ObjectEventManager : NetworkBehaviour, IObjectEventTarget
 
 	void OnTriggerEnter(Collider collider)
 	{
+		if (!collider.isTrigger)
+		{
+			return; //is this really needed?
+		}
 		if(!enableTrigger || m_isTriggered || !(isServer || allowClientEvents) || collider.gameObject == gameObject)
 		{
 			return;

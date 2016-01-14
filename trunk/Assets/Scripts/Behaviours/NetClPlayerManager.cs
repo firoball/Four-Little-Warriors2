@@ -132,18 +132,6 @@ public class NetClPlayerManager : NetworkBehaviour
 		}
 	}
 
-	public int serverid = 0;
-	/*[Command(channel=0)]
-	private void CmdUpdateMotion(int messageId, int data)
-	{
-		serverid = messageId;
-		//running on server
-		if (isServer)
-		{
-			m_streamer.UpdateClientMotion (messageId, data);
-		}
-	}*/
-
 	public override void OnStartLocalPlayer()
 	{
 		HudConfiguration.CreateHud(gameObject);
@@ -187,7 +175,7 @@ public class NetClPlayerManager : NetworkBehaviour
 				//remove all old input states but the newest two - they are required for interpolation
 				while ((m_pendingStates.Count > 2) && (serverState.messageId >= m_pendingStates[0].keyState.messageId))
 				{
-/*					if (
+					/*if (
 						(serverState.messageId == m_pendingStates[0].keyState.messageId) &&
 						serverState.inhibitReconciliation
 						)

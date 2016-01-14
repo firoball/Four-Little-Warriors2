@@ -67,22 +67,23 @@ public class LagCompensator : MonoBehaviour
 		}
 	}*/
 
-	public static void Rewind(GameObject sender, NetworkConnection connectionToClient)
+	public static void Rewind(GameObject sender, GameObject player/*, NetworkConnection connectionToClient*/)
 	{
-		if (!IsActive || sender == null || connectionToClient == null)
+		if (!IsActive || sender == null)// || connectionToClient == null)
 		{
 			return;
 		}
-		byte error = 0;
+		float delay = PlayerManager.GetLatency(player);
+		//byte error = 0;
 
-		int rtt = NetworkTransport.GetCurrentRtt(
+		/*int rtt = NetworkTransport.GetCurrentRtt(
 			connectionToClient.hostId, 
 			connectionToClient.connectionId, 
 			out error
-		);
-		if (error == 0)
-		{
-			float delay = Convert.ToSingle(rtt) * 0.001f;// * 0.5f;
+		);*/
+		//if (error == 0)
+		//{
+		//	float delay = Convert.ToSingle(rtt) * 0.001f;// * 0.5f;
 			int rttDelta = Convert.ToInt32(delay / Time.fixedDeltaTime);
 			int delta = Math.Max(0, rttDelta + c_clientInterpolationDelay);
 			Debug.Log("LagCompensator: Rewind " + delta + " steps");
@@ -98,7 +99,7 @@ public class LagCompensator : MonoBehaviour
 					}
 				}
 			}
-		}
+		//}
 	}
 
 	public static void Restore(GameObject sender)

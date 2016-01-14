@@ -59,7 +59,7 @@ public class NetSvPlayerManager : NetworkBehaviour
 				m_sendBuffer.RemoveAt(0);
 			}
 			//pushing the player is not predicted - disable server reconciliation as long as pushing is active
-			if (properties.isPushed) Debug.Log("INHPUSH");
+			//if (properties.isPushed) Debug.Log("INHPUSH");
 			m_sendBuffer.Add (new ServerState(m_messageId, properties, keyState.inputData, properties.isPushed));
 			
 			LagCompensator.Register(gameObject);
@@ -78,7 +78,7 @@ public class NetSvPlayerManager : NetworkBehaviour
 		{
 			m_attackReleased = false;
 
-			LagCompensator.Rewind(gameObject, connectionToClient);
+			LagCompensator.Rewind(gameObject, gameObject);//, connectionToClient);
 			m_movement.ProcessActions(m_input.GetInputData());
 			LagCompensator.Restore(gameObject);
 

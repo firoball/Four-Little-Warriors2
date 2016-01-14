@@ -4,11 +4,9 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEditor;
 
-using UnityEngine.Networking; //meh
-
 [RequireComponent (typeof(CharacterController))]
 [RequireComponent (typeof(PlayerAttributes))]
-public class PlayerMovement : MonoBehaviour 
+public class PlayerMovement : MonoBehaviour, IPushEventTarget 
 {
 
 	public float walkSpeed = 10.0f;
@@ -25,15 +23,21 @@ public class PlayerMovement : MonoBehaviour
 	private Transform m_launcher;
 	private PlayerAttributes m_attributes;
 	private float m_pushTimer;
+	private float m_pushInhibition;
 	private Vector3 m_pushDirection;
 	private Vector3 m_pushPosition;
 	private bool m_pushRequested;
+	private bool m_lastPushRequested;
+
+	private const float c_pushDelay = 0.2f;
 
 	void Awake()
 	{
 		m_pushTimer = 0.0f;
+		m_pushInhibition = 0.0f;
 		m_pushDirection = Vector3.zero;
 		m_pushRequested = false;
+		m_lastPushRequested = false;
 		m_controller = gameObject.GetComponent<CharacterController>();
 		m_attributes = gameObject.GetComponent<PlayerAttributes>();
 		m_launcher = transform.Find("ProjectileLauncher");
@@ -114,33 +118,29 @@ public class PlayerMovement : MonoBehaviour
 
 	private void ProcessPush(float timeStep)
 	{
-		/* pushing has problems as movement is disabled while pushing.
-		 * the push event itself however finishes early on the server, as client recieved event via RPC
-		 * whiel movement on client is stilllocked, it is already unlocked on the server, and we'll get
-		 * a position jump.
-		 * possible solution: enable/disable feature for PlayerInput which is triggered from ProcessPush()
-		 */
+		/* Reconciliation is deactivated while pushing is active, so variables do not need to be stored in keyframes */
 		if (m_pushRequested)
 		{
-			/*if (m_pushPosition != Vector3.zero)
+			if (m_lastPushRequested != m_pushRequested)
 			{
 				transform.position = m_pushPosition;
-				m_pushPosition = Vector3.zero;
-			}*/
-			//Debug.Log("dothepush");
+			}
+//			Debug.Log("m_pushTimer "+m_pushTimer + " " + m_pushInhibition);
 			m_pushTimer -= timeStep;
 			if (m_pushTimer <= 0.0f)
 			{
 				m_pushDirection = Vector3.zero;
 			}
 			//add some idle time
-			if (m_pushTimer <= -0.2f)
+			if (m_pushTimer <= -m_pushInhibition)
 			{
 				m_pushTimer = 0.0f;
+				m_pushInhibition = 0.0f;
 				m_pushRequested = false;
 			}
 		}
 		m_properties.isPushed = m_pushRequested;
+		m_lastPushRequested = m_pushRequested;
 	}
 
 	public void ProcessInputs(InputData inputData, float timeStep)
@@ -153,7 +153,6 @@ public class PlayerMovement : MonoBehaviour
 		Vector3 moveDirection;
 		if (!m_properties.isPushed)
 		{
-			//Debug.Log ("move "+m_properties.isPushed);
 			float jump = ProcessJump(inputData.jump, sliding, timeStep);
 			byte speedBonus = m_attributes.GetValue(Attributes.SPEED);
 			float speedMultiplier = 1.0f + 0.1f * Convert.ToSingle(speedBonus);
@@ -172,7 +171,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 		m_controller.Move((moveDirection + slideDirection + m_pushDirection) * timeStep);
 		m_properties.isGrounded = m_controller.isGrounded;
-		if (m_properties.isPushed) Debug.Log(transform.position);
+		//if (m_properties.isPushed) Debug.Log(transform.position);
 	}
 
 	private bool m_lastAttack = false;
@@ -241,9 +240,9 @@ public class PlayerMovement : MonoBehaviour
 						Debug.LogWarning("PlayerMovement: Spawned projectile misses Projectile component.");
 					}
 					//inform all clients about spawn if running on server, otherwise just spawn (local player only)
-					if (NetworkServer.active)
+					if (UnityEngine.Networking.NetworkServer.active)
 					{
-						NetworkServer.Spawn(objProjectile);
+						UnityEngine.Networking.NetworkServer.Spawn(objProjectile);
 					}
 				}
 			}
@@ -384,15 +383,15 @@ public class PlayerMovement : MonoBehaviour
 		return m_properties;
 	}
 
-	public void OnPush(Vector3 direction, Vector3 position, float duration)
+	public void OnPush(Vector3 direction, Vector3 position, float duration, float inhibition)
 	{
 		if (!m_pushRequested)
 		{
-			//Debug.Log ("pushed "+ direction);
 			m_pushRequested = true;
 			m_pushDirection = direction;
 			m_pushPosition = position;
 			m_pushTimer = Mathf.Max(0.0f, duration);
+			m_pushInhibition = c_pushDelay + Mathf.Max(0.0f, inhibition);
 		}
 	}
 	

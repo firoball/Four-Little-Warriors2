@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -134,5 +135,41 @@ public static class PlayerManager
 			}
 		}
 		return Mathf.Sqrt(nearestDist);
+	}
+
+	static public float GetLatency(GameObject player)
+	{
+		float latency = 0.0f;
+		PlayerIdentity playerIdentity = player.GetComponent<PlayerIdentity>();
+		if (playerIdentity != null)
+		{
+			byte error = 1;
+			NetworkConnection connection = null;
+
+			//exclude host setup (both isClient and isServer set)
+			if (playerIdentity.isServer && !playerIdentity.isClient)
+			{
+				 connection = playerIdentity.connectionToClient;
+			}
+			if (playerIdentity.isClient && !playerIdentity.isServer)
+			{
+				connection = playerIdentity.connectionToServer;
+			}
+
+			if (connection != null)
+			{
+				int rtt = NetworkTransport.GetCurrentRtt(connection.hostId, connection.connectionId, out error);
+				if (error == 0)
+				{
+					latency = Convert.ToSingle(rtt) * 0.001f;
+				}
+			}
+		}
+		else
+		{
+			Debug.LogWarning("PlayerManager.GetLatency: " + player.name + " does not have a PlayerIdentity.");
+		}
+
+		return latency;
 	}
 }

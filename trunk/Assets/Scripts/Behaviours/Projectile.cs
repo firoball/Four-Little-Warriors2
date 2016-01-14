@@ -62,7 +62,7 @@ public class Projectile : ObjectEventManager
 			NetworkIdentity identity = m_launcher.GetComponent<NetworkIdentity>();
 			if (identity != null)
 			{
-				LagCompensator.Rewind(gameObject, identity.connectionToClient);
+				LagCompensator.Rewind(gameObject, m_launcher);//identity.connectionToClient);
 			}
 		}
 		Move (Time.fixedDeltaTime);

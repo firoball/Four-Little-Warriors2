@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using System.Collections;
 
@@ -38,14 +39,17 @@ public class PlayerEvents : ObjectEventManager
 	[ClientRpc]
 	private void RpcOnPushEvent(Vector3 direction, Vector3 position, float duration)
 	{
-		PushEvent(direction, position, duration);
+		//on client side no extra inhibition is needed - always 0.0f
+		PushEvent(direction, position, duration, 0.0f);
 	}
 	
-	private void PushEvent(Vector3 direction, Vector3 position, float duration)
+	private void PushEvent(Vector3 direction, Vector3 position, float duration, float inhibition)
 	{
-		Debug.Log("PlayerEvents: PushEvent "+direction);
-		PlayerMovement movement = GetComponent<PlayerMovement>();
-		movement.OnPush(direction, position, duration); //temp, build player event system
+//		Debug.Log("PlayerEvents: PushEvent "+direction);
+		ExecuteEvents.Execute<IPushEventTarget>(gameObject, null,(x,y)=>x.OnPush(
+			direction, position, duration, inhibition)
+		                                        );
+
 	}
 
 	private bool InflictDamage(Collider collider)
@@ -69,11 +73,21 @@ public class PlayerEvents : ObjectEventManager
 				Vector3 targetPos = collider.ClosestPointOnBounds(transform.position);
 				Vector3 direction = transform.position - targetPos;
 				direction = Vector3.Normalize(direction) * damageDealer.Knockback;
+				float duration = 0.5f; //something for now
+				//trigger push event on clients
 				if (isServer && !isClient)
 				{
-					RpcOnPushEvent(direction, transform.position, 0.5f); //only send RPC if not in host mode
+					RpcOnPushEvent(direction, transform.position, duration); //only send RPC if not in host mode
 				}
-				PushEvent(direction, transform.position,0.5f); //update server
+				/* add latency of client since pushing on client will happen with delay
+				 * which will force PlayerMovement to ignore input states for a longer while
+				 * so player does not move while still being pushed on the client.
+				 * Without this feature, the player would "jump" around on client side and perform movement
+				 * invisible to client
+				 */
+
+				float inhibition = PlayerManager.GetLatency(gameObject);
+				PushEvent(direction, transform.position, duration, inhibition); //update server
 
 				//DEBUG
 				contactpos = targetPos;
@@ -105,6 +119,7 @@ public class PlayerEvents : ObjectEventManager
 		
 		if (editorDebugdraw)
 		{
+			Gizmos.color = Color.red;
 			Gizmos.DrawSphere(contactpos, 2.0f);
 		}
 	}
