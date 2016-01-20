@@ -9,8 +9,10 @@ public struct PlayerProperties
 	//active data
 	public bool jumpReady;
 	public float jumpTimer;
+	public float staminaConsumption;
 	public bool isGrounded;
 	public bool isPushed;
+	public bool isRunning;
 
 	//transform copy
 	public Vector3 position;
@@ -24,8 +26,10 @@ public struct PlayerProperties
 		if (
 			(props1.jumpReady != props2.jumpReady) ||
 			(props1.isPushed != props2.isPushed) ||
+			(props1.isRunning != props2.isRunning) ||
 			(props1.isGrounded != props2.isGrounded) ||
 			(Mathf.Abs(props1.jumpTimer - props2.jumpTimer) > 0.1f) ||
+			(Mathf.Abs(props1.staminaConsumption - props2.staminaConsumption) > 0.1f) ||
 			(deltaPos.sqrMagnitude > (0.1f * 0.1f)) ||
 			(deltaRot.sqrMagnitude > 1.0f)
 		)
@@ -78,8 +82,10 @@ public struct PlayerProperties
 		int hash = 13;
 		hash = (hash * 7) + jumpReady.GetHashCode();
 		hash = (hash * 7) + isPushed.GetHashCode();
+		hash = (hash * 7) + isRunning.GetHashCode();
 		hash = (hash * 7) + isGrounded.GetHashCode();
 		hash = (hash * 7) + jumpTimer.GetHashCode();
+		hash = (hash * 7) + staminaConsumption.GetHashCode();
 		hash = (hash * 7) + position.GetHashCode();
 		hash = (hash * 7) + rotation.GetHashCode();
 
@@ -92,8 +98,10 @@ public struct PlayerProperties
 		writer.Write (rotation.eulerAngles);
 		writer.Write (jumpReady);
 		writer.Write (isPushed);
+		writer.Write (isRunning);
 		writer.Write (isGrounded);
 		writer.Write (jumpTimer);
+		writer.Write (staminaConsumption);
 	}
 
 	public void NetworkDeserialize(NetworkReader reader)
@@ -102,8 +110,10 @@ public struct PlayerProperties
 		rotation = Quaternion.Euler(reader.ReadVector3());
 		jumpReady = reader.ReadBoolean();
 		isPushed = reader.ReadBoolean();
+		isRunning = reader.ReadBoolean();
 		isGrounded = reader.ReadBoolean();
 		jumpTimer = reader.ReadSingle();
+		staminaConsumption = reader.ReadSingle();
 	}
 }
 

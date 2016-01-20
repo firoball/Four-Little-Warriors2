@@ -27,6 +27,11 @@ public class JumpParticles : MonoBehaviour
 		m_lastGrounded = properties.isGrounded;
 	}
 
+	void OnDestroy ()
+	{
+		StopCoroutine(EffectInhibition());
+	}
+
 	private IEnumerator EffectInhibition()
 	{
 		m_inhibited = true;

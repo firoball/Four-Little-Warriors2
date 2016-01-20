@@ -30,6 +30,9 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 	private bool m_lastPushRequested;
 
 	private const float c_pushDelay = 0.2f;
+	private const float c_runStaminaCost = 4.0f;
+	private const float c_idleStaminaRecovery = 1.0f;
+	private const float c_walkStaminaRecovery = 2.0f;
 
 	void Awake()
 	{
@@ -55,8 +58,10 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		m_properties.rotation = transform.rotation;
 		m_properties.jumpReady = false;
 		m_properties.isPushed = false;
+		m_properties.isRunning = false;
 		m_properties.isGrounded = false;
 		m_properties.jumpTimer = 0.0f;
+		m_properties.staminaConsumption = 0.0f;
 	}
 
 	private float ProcessJump(float jump, bool isSliding, float timeStep)
@@ -143,10 +148,49 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		m_lastPushRequested = m_pushRequested;
 	}
 
+	private float ProcessRun(InputData inputData, float timeStep)
+	{
+		float runSpeed;
+		if (
+			inputData.run > 0.0f && m_attributes.GetValue(Attributes.STAMINA) > 0 &&
+			(inputData.motionH != 0.0f || inputData.motionV != 0.0f)
+		    )
+		{
+			m_properties.staminaConsumption += timeStep * c_runStaminaCost;
+			if (m_properties.staminaConsumption > 1.0f)
+			{
+				m_properties.staminaConsumption -= 1.0f;
+				m_attributes.SubtractValue(Attributes.STAMINA, 1);
+			}
+			runSpeed = inputData.run * runMultiplier;
+			m_properties.isRunning = true;
+		}
+		else
+		{
+			runSpeed = 1.0f;
+			m_properties.isRunning = false;
+		}
+
+		return runSpeed;
+	}
+
 	public void ProcessInputs(InputData inputData, float timeStep)
 	{
 		ProcessPush(timeStep);
-		float run = Mathf.Max(1.0f, inputData.run * runMultiplier);
+		float run = ProcessRun(inputData, timeStep);
+
+		if (inputData.motionH != 0.0f || inputData.motionV != 0.0f)
+		{
+			if (!m_properties.isRunning)
+			{
+				m_attributes.AddValue(Attributes.STAMINA, timeStep * c_walkStaminaRecovery);
+			}
+		}
+		else
+		{
+			m_attributes.AddValue(Attributes.STAMINA, timeStep * c_idleStaminaRecovery);
+		}
+		//float run = Mathf.Max(1.0f, inputData.run * runMultiplier);
 		Vector3 slideDirection;
 		bool sliding = ProcessSliding(out slideDirection, run);
 
@@ -284,7 +328,8 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		Vector3 posCur = currentProps.position;
 		Quaternion rotCur = currentProps.rotation;
 		float jumpCur = currentProps.jumpTimer;
-		
+
+		m_properties = currentProps; //make sure all non interpolated properties are up to date
 		if (!extrapolate)
 		{
 			time = Mathf.Min(time, 1.0f);

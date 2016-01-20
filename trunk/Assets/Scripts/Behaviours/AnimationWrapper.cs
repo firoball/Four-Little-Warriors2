@@ -29,10 +29,17 @@ public class AnimationWrapper : MonoBehaviour
 	
 	void Update () 
 	{
-		//connect to PlayerInput
 		InputData inputData = input.GetInputData();
-		float moveV = inputData.motionV * (inputData.run + 1.0f);
-		float moveH = inputData.motionH * (inputData.run + 1.0f);
+		PlayerProperties properties = movement.GetProperties();
+
+		//connect to PlayerInput
+		float moveV = inputData.motionV;
+		float moveH = inputData.motionH;
+		if (properties.isRunning)
+		{
+			moveV *= 2.0f;
+			moveH *= 2.0f;
+		}
 
 		float smoothMoveV = Smooth(moveV, ref lastMoveV, ref oldMoveV, ref moveVTimer);
 		float smoothMoveH = Smooth(moveH, ref lastMoveH, ref oldMoveH, ref moveHTimer);
@@ -41,7 +48,6 @@ public class AnimationWrapper : MonoBehaviour
 		animator.SetBool("isMoving", (moveV != 0.0f || moveH != 0.0f));
 
 		//connect to PlayerProperties
-		PlayerProperties properties = movement.GetProperties();
 		animator.SetBool("isJumping", (properties.jumpTimer > 0.0f));
 		animator.SetBool("isGrounded", properties.isGrounded);
 	}

@@ -126,7 +126,7 @@ public class NetClPlayerManager : NetworkBehaviour
 			ClientState clientState = new ClientState(keyState, m_movement.GetProperties());
 			m_pendingStates.Add(clientState);
 
-			//prepare for interpolation - rewind pos/rot to interpolated state
+			//prepare for interpolation - rewind to interpolated state
 			m_movement.SetProperties(properties);
 			m_stateTime = Time.time;
 		}
@@ -135,14 +135,6 @@ public class NetClPlayerManager : NetworkBehaviour
 	public override void OnStartLocalPlayer()
 	{
 		HudConfiguration.CreateHud(gameObject);
-
-		//sync message id with server
-		/*PlayerIdentity identity = GetComponent<PlayerIdentity>();
-		if (identity != null)
-		{
-			m_messageId = identity.ServerSyncId;
-		}*/
-		
 		gameObject.name += " (Owner)";
 	}
 
@@ -284,7 +276,6 @@ public class NetClPlayerManager : NetworkBehaviour
 		//interpolation cannot be started until two fixed frames are available
 		if (m_pendingStates.Count > 1)
 		{
-			//ClientState cs;
 			float time = (Time.time - m_stateTime) / Time.fixedDeltaTime;
 			time = Mathf.Max(Mathf.Min(time, 1.0f), 0.0f);
 			

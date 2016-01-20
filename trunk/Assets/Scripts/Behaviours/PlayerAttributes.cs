@@ -8,7 +8,7 @@ public class PlayerAttributes : CollectableItemContainer
 	public PlayerAttribute[] attributes;
 
 	[SyncVar(hook="DeserializeDataStream")]
-	public/*private*/ string m_dataStream = "";
+	private string m_dataStream = "";
 
 	private EventSubscription m_eventSubscription = null;
 
@@ -21,8 +21,8 @@ public class PlayerAttributes : CollectableItemContainer
 			{
 				attributes[i].limitMax = Byte.MaxValue;
 			}
-			attributes[i].value = Math.Max(
-				attributes[i].limitMin, attributes[i].value);
+			attributes[i].value = Math.Max(attributes[i].limitMin, attributes[i].value);
+			attributes[i].interimValue = 0.0f;
 		}
 	}
 
@@ -83,8 +83,6 @@ public class PlayerAttributes : CollectableItemContainer
 				{
 					attributes[index].max = attributes[index].limitMax;
 				}
-				//inform clients
-				//RpcUpdateAttribute(index, attributes[index].value, attributes[index].max);
 			}
 			else
 			{
@@ -102,8 +100,6 @@ public class PlayerAttributes : CollectableItemContainer
 				{
 					attributes[index].value = attributes[index].max;
 				}
-				//inform clients
-				//RpcUpdateAttribute(index, attributes[index].value, attributes[index].max);
 			}
 			//trigger event
 			TriggerEvent(attributes[index]);
@@ -125,53 +121,143 @@ public class PlayerAttributes : CollectableItemContainer
 		return true;
 	}	
 
-	/*[ClientRpc]
-	private void RpcUpdateAttribute(int index, byte value, byte max)
-	{
-		//avoid over/underflow error in case someone fiddled around on the client
-		if (index < attributes.Length && index >= 0)
-		{
-			attributes[index].value = value;
-			attributes[index].max = max;
-		}
-	}*/
-
 	public byte GetValue(Attributes type)
 	{
-		for(int i = 0; i < attributes.Length; i++)
+		int i = Find (type);
+		if (i < 0)
 		{
-			if (attributes[i].type == type)
-			{
-				return attributes[i].value;
-			}
+			return 0;
 		}
-		return 0;
+		
+		return attributes[i].value;
 	}
 
-	public byte SubtractValue(Attributes type, byte value)
+	public byte SubtractValue(Attributes type, float value)
 	{
-		for(int i = 0; i < attributes.Length; i++)
+		if (!isServer)
 		{
-			if (attributes[i].type == type)
-			{
-				if (attributes[i].value > value)
-				{
-					attributes[i].value -= value;
-				}
-				else
-				{
-					attributes[i].value = 0;
-				}
-				//inform clients
-				SerializeDataStream();
-				//trigger event
-				TriggerEvent(attributes[i]);
-				return attributes[i].value;
-			}
+			return 0;
 		}
-		return 0;
+		
+		int i = Find (type);
+		if (i < 0)
+		{
+			return 0;
+		}
+		
+		if (attributes[i].value == 0)
+		{
+			return attributes[i].value;
+		}
+		attributes[i].interimValue -= Mathf.Min(value, 0.0f);
+		float roundedValue = Mathf.Ceil(attributes[i].interimValue);
+		if (roundedValue > -1.0f)
+		{
+			return attributes[i].value;
+		}
+		attributes[i].interimValue = attributes[i].interimValue % roundedValue;
+		byte resultingValue = Convert.ToByte(-roundedValue);
+		return SubtractValue(i, resultingValue);
 	}
 	
+	public byte SubtractValue(Attributes type, byte value)
+	{
+		if (!isServer)
+		{
+			return 0;
+		}
+
+		int i = Find (type);
+		return SubtractValue(i, value);
+	}
+	
+	private byte SubtractValue(int i, byte value)
+	{
+		if (i < 0)
+		{
+			return 0;
+		}
+		
+		if (attributes[i].value > value)
+		{
+			attributes[i].value -= value;
+		}
+		else
+		{
+			attributes[i].value = 0;
+		}
+		//inform clients
+		SerializeDataStream();
+		//trigger event
+		TriggerEvent(attributes[i]);
+		return attributes[i].value;
+	}
+
+	public byte AddValue(Attributes type, float value)
+	{
+		if (!isServer)
+		{
+			return 0;
+		}
+		
+		int i = Find (type);
+		if (i < 0)
+		{
+			return 0;
+		}
+		
+		if (attributes[i].value == attributes[i].max)
+		{
+			return attributes[i].value;
+		}
+		attributes[i].interimValue += Mathf.Max(value, 0.0f);
+		float roundedValue = Mathf.Floor(attributes[i].interimValue);
+		if (roundedValue < 1.0f)
+		{
+			return attributes[i].value;
+		}
+		attributes[i].interimValue = attributes[i].interimValue % roundedValue;
+		byte resultingValue = Convert.ToByte(roundedValue);
+		return AddValue(i, resultingValue);
+	}
+
+	public byte AddValue(Attributes type, byte value)
+	{
+		if (!isServer)
+		{
+			return 0;
+		}
+		
+		int i = Find (type);
+		return AddValue(i, value);		
+	}
+
+	private byte AddValue(int i, byte value)
+	{
+		if (i < 0)
+		{
+			return 0;
+		}
+
+		if (value == 0)
+		{
+			return attributes[i].value;
+		}
+		
+		if (attributes[i].value <= Convert.ToByte(attributes[i].max - value))
+		{
+			attributes[i].value += value;
+		}
+		else
+		{
+			attributes[i].value = attributes[i].max;
+		}
+		//inform clients
+		SerializeDataStream();
+		//trigger event
+		TriggerEvent(attributes[i]);
+		return attributes[i].value;
+	}
 	/*public byte GetMax(Attributes type)
 	{
 		for(int i = 0; i < attributes.Length; i++)
@@ -207,12 +293,10 @@ public class PlayerAttributes : CollectableItemContainer
 			max[i] = (char)attributes[i].max;
 		}
 		m_dataStream = new string(value) + new string(max);
-		//Debug.Log("send serialized attributes "+m_dataStream);
 	}
 
 	private void DeserializeDataStream(string dataStream)
 	{
-		//Debug.Log("Deserialize: "+name);
 		//each attribute requires 2 byte
 		if (dataStream.Length != 2 * attributes.Length)
 		{
@@ -229,14 +313,12 @@ public class PlayerAttributes : CollectableItemContainer
 				TriggerEvent(attributes[index]);
 			}
 		}
-		//Debug.Log("received serialized attributes "+dataStream);
 	}
 
 	private void TriggerEvent(PlayerAttribute attribute)
 	{
 		if (m_eventSubscription != null)
 		{
-			//Debug.Log("Event OnAttributeChange " + attribute.type);
 			m_eventSubscription.ExecuteEvent<IAttributeEventTarget>(null,(x,y)=>x.OnAttributeChange(attribute));
 		}
 	}
@@ -249,9 +331,14 @@ public struct PlayerAttribute
 	public Attributes type;
 	public byte limitMin;
 	public byte limitMax;
+	public bool useClientPrediction;
 
-	//dynamic
+	//dynamic - synched
 	public byte value;
 //	public byte min;
 	public byte max;
+
+	//dynamic - local
+	public float interimValue;
+	public byte predictedValue;
 }
