@@ -30,9 +30,9 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 	private bool m_lastPushRequested;
 
 	private const float c_pushDelay = 0.2f;
-	private const float c_runStaminaCost = 4.0f;
-	private const float c_idleStaminaRecovery = 1.0f;
-	private const float c_walkStaminaRecovery = 2.0f;
+	private const float c_runStaminaCost = -5.0f;
+	private const float c_idleStaminaRecovery = 2.0f;
+	private const float c_walkStaminaRecovery = 1.0f;
 
 	void Awake()
 	{
@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		m_properties.isRunning = false;
 		m_properties.isGrounded = false;
 		m_properties.jumpTimer = 0.0f;
-		m_properties.staminaConsumption = 0.0f;
+		m_properties.stamina = Convert.ToSingle(m_attributes.GetValue(Attributes.STAMINA));
 	}
 
 	private float ProcessJump(float jump, bool isSliding, float timeStep)
@@ -151,17 +151,17 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 	private float ProcessRun(InputData inputData, float timeStep)
 	{
 		float runSpeed;
+		float staminaChange;
+
+		//manually sync stamina server side - attribute might have changed externally
+		m_properties.stamina = m_attributes.SyncGetValue(Attributes.STAMINA, m_properties.stamina);
+
 		if (
-			inputData.run > 0.0f && m_attributes.GetValue(Attributes.STAMINA) > 0 &&
+			inputData.run > 0.0f && m_properties.stamina >= 1.0f &&
 			(inputData.motionH != 0.0f || inputData.motionV != 0.0f)
 		    )
 		{
-			m_properties.staminaConsumption += timeStep * c_runStaminaCost;
-			if (m_properties.staminaConsumption > 1.0f)
-			{
-				m_properties.staminaConsumption -= 1.0f;
-				m_attributes.SubtractValue(Attributes.STAMINA, 1);
-			}
+			staminaChange = timeStep * c_runStaminaCost;
 			runSpeed = inputData.run * runMultiplier;
 			m_properties.isRunning = true;
 		}
@@ -169,7 +169,25 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		{
 			runSpeed = 1.0f;
 			m_properties.isRunning = false;
+
+			if (inputData.motionH != 0.0f || inputData.motionV != 0.0f)
+			{
+				if (inputData.run < 1.0f)
+				{
+					staminaChange = timeStep * c_walkStaminaRecovery;
+				}
+				else
+				{
+					staminaChange = 0.0f;
+				}
+			}
+			else
+			{
+				staminaChange = timeStep * c_idleStaminaRecovery;
+			}
 		}
+		m_properties.stamina += staminaChange;
+		m_properties.stamina = m_attributes.SyncSetValue(Attributes.STAMINA, m_properties.stamina);
 
 		return runSpeed;
 	}
@@ -179,17 +197,6 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		ProcessPush(timeStep);
 		float run = ProcessRun(inputData, timeStep);
 
-		if (inputData.motionH != 0.0f || inputData.motionV != 0.0f)
-		{
-			if (!m_properties.isRunning)
-			{
-				m_attributes.AddValue(Attributes.STAMINA, timeStep * c_walkStaminaRecovery);
-			}
-		}
-		else
-		{
-			m_attributes.AddValue(Attributes.STAMINA, timeStep * c_idleStaminaRecovery);
-		}
 		//float run = Mathf.Max(1.0f, inputData.run * runMultiplier);
 		Vector3 slideDirection;
 		bool sliding = ProcessSliding(out slideDirection, run);
@@ -330,6 +337,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		float jumpCur = currentProps.jumpTimer;
 
 		m_properties = currentProps; //make sure all non interpolated properties are up to date
+		m_attributes.SyncSetValue(Attributes.STAMINA, m_properties.stamina);
 		if (!extrapolate)
 		{
 			time = Mathf.Min(time, 1.0f);

@@ -22,7 +22,6 @@ public class PlayerAttributes : CollectableItemContainer
 				attributes[i].limitMax = Byte.MaxValue;
 			}
 			attributes[i].value = Math.Max(attributes[i].limitMin, attributes[i].value);
-			attributes[i].interimValue = 0.0f;
 		}
 	}
 
@@ -132,34 +131,58 @@ public class PlayerAttributes : CollectableItemContainer
 		return attributes[i].value;
 	}
 
-	public byte SubtractValue(Attributes type, float value)
+	public float SyncGetValue(Attributes type, float value)
 	{
+		//server only - use for manual synching
 		if (!isServer)
 		{
-			return 0;
+			return value;
 		}
-		
+
 		int i = Find (type);
 		if (i < 0)
 		{
 			return 0;
 		}
-		
-		if (attributes[i].value == 0)
+
+		if (!attributes[i].disableSync)
 		{
-			return attributes[i].value;
+			return value;
 		}
-		attributes[i].interimValue -= Mathf.Min(value, 0.0f);
-		float roundedValue = Mathf.Ceil(attributes[i].interimValue);
-		if (roundedValue > -1.0f)
-		{
-			return attributes[i].value;
-		}
-		attributes[i].interimValue = attributes[i].interimValue % roundedValue;
-		byte resultingValue = Convert.ToByte(-roundedValue);
-		return SubtractValue(i, resultingValue);
+
+		float originalValue = Convert.ToSingle(attributes[i].value);
+		float roundedValue = Mathf.Floor(value);
+		float delta = originalValue - roundedValue;
+
+		return value + delta;
 	}
-	
+
+	public float SyncSetValue(Attributes type, float value)
+	{
+		//use for manual synching on client and server side
+		int i = Find (type);
+		if (i < 0)
+		{
+			return 0.0f;
+		}
+		
+		//only allow direct assignment on client if no automatic synching is done
+		if (isServer || attributes[i].disableSync)
+		{
+			value = Mathf.Min(Mathf.Max(0.0f, value), Convert.ToSingle(attributes[i].max));
+			attributes[i].value = Convert.ToByte(Mathf.FloorToInt(value));
+			if (isServer && !attributes[i].disableSync)
+			{
+				//inform clients
+				SerializeDataStream();
+			}
+			//trigger event
+			TriggerEvent(attributes[i]);
+		}
+
+		return value;
+	}
+
 	public byte SubtractValue(Attributes type, byte value)
 	{
 		if (!isServer)
@@ -168,11 +191,6 @@ public class PlayerAttributes : CollectableItemContainer
 		}
 
 		int i = Find (type);
-		return SubtractValue(i, value);
-	}
-	
-	private byte SubtractValue(int i, byte value)
-	{
 		if (i < 0)
 		{
 			return 0;
@@ -193,34 +211,6 @@ public class PlayerAttributes : CollectableItemContainer
 		return attributes[i].value;
 	}
 
-	public byte AddValue(Attributes type, float value)
-	{
-		if (!isServer)
-		{
-			return 0;
-		}
-		
-		int i = Find (type);
-		if (i < 0)
-		{
-			return 0;
-		}
-		
-		if (attributes[i].value == attributes[i].max)
-		{
-			return attributes[i].value;
-		}
-		attributes[i].interimValue += Mathf.Max(value, 0.0f);
-		float roundedValue = Mathf.Floor(attributes[i].interimValue);
-		if (roundedValue < 1.0f)
-		{
-			return attributes[i].value;
-		}
-		attributes[i].interimValue = attributes[i].interimValue % roundedValue;
-		byte resultingValue = Convert.ToByte(roundedValue);
-		return AddValue(i, resultingValue);
-	}
-
 	public byte AddValue(Attributes type, byte value)
 	{
 		if (!isServer)
@@ -229,11 +219,6 @@ public class PlayerAttributes : CollectableItemContainer
 		}
 		
 		int i = Find (type);
-		return AddValue(i, value);		
-	}
-
-	private byte AddValue(int i, byte value)
-	{
 		if (i < 0)
 		{
 			return 0;
@@ -306,7 +291,10 @@ public class PlayerAttributes : CollectableItemContainer
 		char[] values = dataStream.ToCharArray();
 		for (int index = 0; index < attributes.Length; index++)
 		{
-			if (attributes[index].value != (byte)values[index] || attributes[index].max != (byte)values[attributes.Length + index] )
+			if (
+				(!attributes[index].disableSync) &&
+				(attributes[index].value != (byte)values[index] || attributes[index].max != (byte)values[attributes.Length + index] )
+				)
 			{
 				attributes[index].value = (byte)values[index];
 				attributes[index].max = (byte)values[attributes.Length + index];
@@ -331,14 +319,10 @@ public struct PlayerAttribute
 	public Attributes type;
 	public byte limitMin;
 	public byte limitMax;
-	public bool useClientPrediction;
+	public bool disableSync;
 
 	//dynamic - synched
 	public byte value;
 //	public byte min;
 	public byte max;
-
-	//dynamic - local
-	public float interimValue;
-	public byte predictedValue;
 }

@@ -16,6 +16,8 @@ public class DamageDealer : MonoBehaviour
 	private byte m_maxDamage = 0;
 	[SerializeField]
 	private float m_knockback = 0.0f;
+	[SerializeField]
+	private bool m_enableOnTouch = false;
 
 	public AttackTypes AttackType 
 	{
@@ -55,4 +57,8 @@ public class DamageDealer : MonoBehaviour
 		set {m_knockback = value;}
 	}
 
+	public bool EnableOnTouch 
+	{
+		get {return m_enableOnTouch;}
+	}
 }

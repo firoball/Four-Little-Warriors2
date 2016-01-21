@@ -18,12 +18,30 @@ public class PlayerEvents : ObjectEventManager
 	//running only on server/host
 	protected override bool OnEventTrigger(Collider collider)
 	{
-		return InflictDamage(collider);
+		GameObject target = collider.gameObject;
+		DamageDealer damageDealer = target.GetComponent<DamageDealer>();
+		if (damageDealer != null && damageDealer.EnableOnTouch)
+		{
+			return InflictDamage(collider, damageDealer);
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	protected override bool OnEventShot(Collider collider)
 	{
-		return InflictDamage(collider);
+		GameObject target = collider.gameObject;
+		DamageDealer damageDealer = target.GetComponent<DamageDealer>();
+		if (damageDealer != null && !damageDealer.EnableOnTouch)
+		{
+			return InflictDamage(collider, damageDealer);
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/*protected override void RpcOnRemoteEventTrigger()
@@ -52,7 +70,7 @@ public class PlayerEvents : ObjectEventManager
 
 	}
 
-	private bool InflictDamage(Collider collider)
+	private bool InflictDamage(Collider collider, DamageDealer damageDealer)
 	{
 		GameObject target = collider.gameObject;
 
@@ -61,47 +79,39 @@ public class PlayerEvents : ObjectEventManager
 		{
 			return false;
 		}
-		//Debug.Log(target.name);
-		DamageDealer damageDealer = target.GetComponent<DamageDealer>();
-		if (damageDealer != null)
-		{
-			Debug.Log("PLAYER Host hit");
-			/*byte value = */attributes.SubtractValue(m_lifeAttribute, damageDealer.Damage);
 
-			if (damageDealer.Knockback > 0.0f)
+		Debug.Log("PLAYER Host hit");
+		/*byte value = */attributes.SubtractValue(m_lifeAttribute, damageDealer.Damage);
+
+		if (damageDealer.Knockback > 0.0f)
+		{
+			Vector3 targetPos = collider.ClosestPointOnBounds(transform.position);
+			Vector3 direction = transform.position - targetPos;
+			direction = Vector3.Normalize(direction) * damageDealer.Knockback;
+			float duration = 0.5f; //something for now
+			//trigger push event on clients
+			if (isServer && !isClient)
 			{
-				Vector3 targetPos = collider.ClosestPointOnBounds(transform.position);
-				Vector3 direction = transform.position - targetPos;
-				direction = Vector3.Normalize(direction) * damageDealer.Knockback;
-				float duration = 0.5f; //something for now
-				//trigger push event on clients
-				if (isServer && !isClient)
-				{
-					RpcOnPushEvent(direction, transform.position, duration); //only send RPC if not in host mode
-				}
-				/* add latency of client since pushing on client will happen with delay
-				 * which will force PlayerMovement to ignore input states for a longer while
-				 * so player does not move while still being pushed on the client.
-				 * Without this feature, the player would "jump" around on client side and perform movement
-				 * invisible to client
-				 */
-
-				float inhibition = PlayerManager.GetLatency(gameObject);
-				PushEvent(direction, transform.position, duration, inhibition); //update server
-
-				//DEBUG
-				contactpos = targetPos;
-				updateContact = true;
+				RpcOnPushEvent(direction, transform.position, duration); //only send RPC if not in host mode
 			}
-			//TODO: reset with some delay?
-			ResetTriggered();
-			ResetShot();
-			return true;
+			/* add latency of client since pushing on client will happen with delay
+			 * which will force PlayerMovement to ignore input states for a longer while
+			 * so player does not move while still being pushed on the client.
+			 * Without this feature, the player would "jump" around on client side and perform movement
+			 * invisible to client
+			 */
+
+			float inhibition = PlayerManager.GetLatency(gameObject);
+			PushEvent(direction, transform.position, duration, inhibition); //update server
+
+			//DEBUG
+			contactpos = targetPos;
+			updateContact = true;
 		}
-		else
-		{
-			return false;
-		}
+		//TODO: reset with some delay?
+		ResetTriggered();
+		ResetShot();
+		return true;
 	}
 
 	//DEBUG

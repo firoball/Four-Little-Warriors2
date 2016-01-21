@@ -9,7 +9,7 @@ public struct PlayerProperties
 	//active data
 	public bool jumpReady;
 	public float jumpTimer;
-	public float staminaConsumption;
+	public float stamina;
 	public bool isGrounded;
 	public bool isPushed;
 	public bool isRunning;
@@ -23,27 +23,67 @@ public struct PlayerProperties
 		Vector3 deltaPos = props1.position - props2.position;
 		Vector3 deltaRot = props1.rotation.eulerAngles - props2.rotation.eulerAngles;
 
-		if (
+		bool sync = false;
+
+		if (props1.jumpReady != props2.jumpReady)
+		{
+			sync = true;
+			Debug.Log("Sync jumpReady: " + props1.jumpReady + "/" + props2.jumpReady);
+		}
+		if (props1.isPushed != props2.isPushed)
+		{
+			sync = true;
+			Debug.Log("Sync isPushed: " + props1.isPushed + "/" + props2.isPushed);
+		}
+		if (props1.isRunning != props2.isRunning)
+		{
+			sync = true;
+			Debug.Log("Sync isRunning: " + props1.isRunning + "/" + props2.isRunning);
+		}
+		if (props1.isGrounded != props2.isGrounded)
+		{
+			sync = true;
+			Debug.Log("Sync isGrounded: " + props1.isGrounded + "/" + props2.isGrounded);
+		}
+		if (Mathf.Abs(props1.jumpTimer - props2.jumpTimer) > 0.1f)
+		{
+			sync = true;
+			Debug.Log("Sync jumpTimer: " + props1.jumpTimer + "/" + props2.jumpTimer);
+		}
+		if (Mathf.Abs(props1.stamina - props2.stamina) > 0.1f)
+		{
+			sync = true;
+			Debug.Log("Sync stamina: " + props1.stamina + "/" + props2.stamina);
+		}
+		if (deltaPos.sqrMagnitude > (0.1f * 0.1f))
+		{
+			sync = true;
+			Debug.Log("Sync position: " + props1.position + "/" + props2.position);
+		}
+		if (deltaRot.sqrMagnitude > 1.0f)
+		{
+			sync = true;
+			Debug.Log("Sync rotation: " + props1.rotation.eulerAngles + "/" + props2.rotation.eulerAngles);
+		}
+
+		return sync;
+/*		if (
 			(props1.jumpReady != props2.jumpReady) ||
 			(props1.isPushed != props2.isPushed) ||
 			(props1.isRunning != props2.isRunning) ||
 			(props1.isGrounded != props2.isGrounded) ||
 			(Mathf.Abs(props1.jumpTimer - props2.jumpTimer) > 0.1f) ||
-			(Mathf.Abs(props1.staminaConsumption - props2.staminaConsumption) > 0.1f) ||
+			(Mathf.Abs(props1.stamina - props2.stamina) > 0.1f) ||
 			(deltaPos.sqrMagnitude > (0.1f * 0.1f)) ||
 			(deltaRot.sqrMagnitude > 1.0f)
 		)
 		{
-			Debug.Log("pos "+props1.position+"/"+props2.position+" rot "
-			          +props1.rotation.eulerAngles+"/"+props2.rotation.eulerAngles);
-			/*Debug.Log("dpos "+deltaPos.sqrMagnitude+" drot "+deltaRot.sqrMagnitude
-			          + " jt "+Mathf.Abs(props1.jumpTimer - props2.jumpTimer));*/
 			return true;
 		}
 		else
 		{
 			return false;
-		}
+		}*/
 	}
 
 	public static bool operator ==(PlayerProperties props1, PlayerProperties props2)
@@ -85,7 +125,7 @@ public struct PlayerProperties
 		hash = (hash * 7) + isRunning.GetHashCode();
 		hash = (hash * 7) + isGrounded.GetHashCode();
 		hash = (hash * 7) + jumpTimer.GetHashCode();
-		hash = (hash * 7) + staminaConsumption.GetHashCode();
+		hash = (hash * 7) + stamina.GetHashCode();
 		hash = (hash * 7) + position.GetHashCode();
 		hash = (hash * 7) + rotation.GetHashCode();
 
@@ -101,7 +141,7 @@ public struct PlayerProperties
 		writer.Write (isRunning);
 		writer.Write (isGrounded);
 		writer.Write (jumpTimer);
-		writer.Write (staminaConsumption);
+		writer.Write (stamina);
 	}
 
 	public void NetworkDeserialize(NetworkReader reader)
@@ -113,7 +153,7 @@ public struct PlayerProperties
 		isRunning = reader.ReadBoolean();
 		isGrounded = reader.ReadBoolean();
 		jumpTimer = reader.ReadSingle();
-		staminaConsumption = reader.ReadSingle();
+		stamina = reader.ReadSingle();
 	}
 }
 
