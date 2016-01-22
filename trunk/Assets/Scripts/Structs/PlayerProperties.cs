@@ -13,6 +13,8 @@ public struct PlayerProperties
 	public bool isGrounded;
 	public bool isPushed;
 	public bool isRunning;
+	public ActionTypes actionId;
+	public float actionTimer;
 
 	//transform copy
 	public Vector3 position;
@@ -64,6 +66,16 @@ public struct PlayerProperties
 		{
 			sync = true;
 			Debug.Log("Sync rotation: " + props1.rotation.eulerAngles + "/" + props2.rotation.eulerAngles);
+		}
+		if (props1.actionId != props2.actionId)
+		{
+			sync = true;
+			Debug.Log("Sync actionId: " + props1.actionId + "/" + props2.actionId);
+		}
+		if (props1.actionTimer != props2.actionTimer)
+		{
+			sync = true;
+			Debug.Log("Sync actionTimer: " + props1.actionTimer + "/" + props2.actionTimer);
 		}
 
 		return sync;
@@ -126,6 +138,8 @@ public struct PlayerProperties
 		hash = (hash * 7) + isGrounded.GetHashCode();
 		hash = (hash * 7) + jumpTimer.GetHashCode();
 		hash = (hash * 7) + stamina.GetHashCode();
+		hash = (hash * 7) + actionId.GetHashCode();
+		hash = (hash * 7) + actionTimer.GetHashCode();
 		hash = (hash * 7) + position.GetHashCode();
 		hash = (hash * 7) + rotation.GetHashCode();
 
@@ -142,6 +156,8 @@ public struct PlayerProperties
 		writer.Write (isGrounded);
 		writer.Write (jumpTimer);
 		writer.Write (stamina);
+		writer.Write ((byte)actionId);
+		writer.Write (actionTimer);
 	}
 
 	public void NetworkDeserialize(NetworkReader reader)
@@ -154,6 +170,8 @@ public struct PlayerProperties
 		isGrounded = reader.ReadBoolean();
 		jumpTimer = reader.ReadSingle();
 		stamina = reader.ReadSingle();
+		actionId = (ActionTypes)reader.ReadByte();
+		actionTimer = reader.ReadSingle();
 	}
 }
 

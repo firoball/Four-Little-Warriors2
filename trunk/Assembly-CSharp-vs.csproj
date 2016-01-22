@@ -88,9 +88,11 @@
      <Compile Include="Assets\Scripts\Behaviours\TrapFireBeam.cs" />
      <Compile Include="Assets\Scripts\Behaviours\TriggerSwitch.cs" />
      <Compile Include="Assets\Scripts\Classes\ChatMessage.cs" />
+     <Compile Include="Assets\Scripts\Classes\MovementSettings.cs" />
      <Compile Include="Assets\Scripts\Classes\Static\ExtendedMsgType.cs" />
      <Compile Include="Assets\Scripts\Classes\Static\PlayerManager.cs" />
      <Compile Include="Assets\Scripts\Classes\Static\Settings.cs" />
+     <Compile Include="Assets\Scripts\Enums\ActionTypes.cs" />
      <Compile Include="Assets\Scripts\Enums\AttackTypes.cs" />
      <Compile Include="Assets\Scripts\Enums\Attributes.cs" />
      <Compile Include="Assets\Scripts\Enums\ChatMode.cs" />

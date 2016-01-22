@@ -117,7 +117,7 @@ public class Projectile : ObjectEventManager
 			name += " (deactivated)";
 			gameObject.SetActive(false);
 		}
-		Debug.Log(name + " "+m_level);
+		//Debug.Log(name + " "+m_level);
 		SetupColor();
 		allowClientEvents = false; //server spawned object. never react on client side events
 	}

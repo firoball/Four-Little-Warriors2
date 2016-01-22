@@ -9,14 +9,8 @@ using UnityEditor;
 public class PlayerMovement : MonoBehaviour, IPushEventTarget 
 {
 
-	public float walkSpeed = 10.0f;
-	public float slideSpeed = 10.0f;
-	public float runMultiplier = 2.0f;
-	public float sensitivityX = 50.0f;
-	public float fallSpeed = 20.0f;
-	public float jumpSpeed = 40.0f;
-	public float jumpTime = 0.3f;
-	public GameObject shot;
+	public MovementSettings m_settings;
+	public GameObject m_shot;
 	
 	public/*private*/ PlayerProperties m_properties;
 	private CharacterController m_controller;
@@ -28,11 +22,6 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 	private Vector3 m_pushPosition;
 	private bool m_pushRequested;
 	private bool m_lastPushRequested;
-
-	private const float c_pushDelay = 0.2f;
-	private const float c_runStaminaCost = -5.0f;
-	private const float c_idleStaminaRecovery = 2.0f;
-	private const float c_walkStaminaRecovery = 1.0f;
 
 	void Awake()
 	{
@@ -78,11 +67,11 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		if (m_properties.jumpTimer > 0.0f)
 		{
 			m_properties.jumpTimer += timeStep;
-			if (m_properties.jumpTimer > jumpTime)
+			if (m_properties.jumpTimer > m_settings.jumpTime)
 			{
 				m_properties.jumpTimer = 0.0f;
 			}
-			ret = jumpSpeed;
+			ret = m_settings.jumpSpeed;
 		}
 		else
 		{
@@ -112,7 +101,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 				{
 					Vector3 tangent = Vector3.Cross(hit.normal, Vector3.up);
 					Vector3 down = Vector3.Cross(hit.normal, tangent);
-					slideDirection = down * slideSpeed * run;
+					slideDirection = down * m_settings.slideSpeed * run;
 					return true;
 				}
 			}
@@ -153,16 +142,13 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		float runSpeed;
 		float staminaChange;
 
-		//manually sync stamina server side - attribute might have changed externally
-		m_properties.stamina = m_attributes.SyncGetValue(Attributes.STAMINA, m_properties.stamina);
-
 		if (
 			inputData.run > 0.0f && m_properties.stamina >= 1.0f &&
-			(inputData.motionH != 0.0f || inputData.motionV != 0.0f)
+			(/*inputData.motionH != 0.0f ||*/ inputData.motionV != 0.0f)
 		    )
 		{
-			staminaChange = timeStep * c_runStaminaCost;
-			runSpeed = inputData.run * runMultiplier;
+			staminaChange = timeStep * m_settings.runStaminaCost;
+			runSpeed = inputData.run * m_settings.runMultiplier;
 			m_properties.isRunning = true;
 		}
 		else
@@ -174,7 +160,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 			{
 				if (inputData.run < 1.0f)
 				{
-					staminaChange = timeStep * c_walkStaminaRecovery;
+					staminaChange = timeStep * m_settings.walkStaminaRecovery;
 				}
 				else
 				{
@@ -183,52 +169,71 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 			}
 			else
 			{
-				staminaChange = timeStep * c_idleStaminaRecovery;
+				staminaChange = timeStep * m_settings.idleStaminaRecovery;
 			}
 		}
 		m_properties.stamina += staminaChange;
-		m_properties.stamina = m_attributes.SyncSetValue(Attributes.STAMINA, m_properties.stamina);
 
 		return runSpeed;
 	}
 
+	private float ProcessMovement(InputData inputData, float run, float timeStep)
+	{
+		byte speedBonus = m_attributes.GetValue(Attributes.SPEED);
+		float speedMultiplier = 1.0f + 0.1f * Convert.ToSingle(speedBonus);
+		float forward = 0.0f;
+		
+		//move forward only when no action is active or when jumping/falling
+		if (m_properties.actionId == ActionTypes.NONE || !m_properties.jumpReady)
+		{
+			forward = inputData.motionV * m_settings.walkSpeed * run * speedMultiplier;
+		}
+		transform.Rotate(0, inputData.motionH * m_settings.sensitivityX * timeStep, 0);
+
+		return forward;
+	}
+	
 	public void ProcessInputs(InputData inputData, float timeStep)
 	{
+		//manually sync stamina (server side only) - attribute might have changed externally (e.g. item collected)
+		m_properties.stamina = m_attributes.SyncGetValue(Attributes.STAMINA, m_properties.stamina);
+		
+		//pushing (not synched - event based)
 		ProcessPush(timeStep);
-		float run = ProcessRun(inputData, timeStep);
 
-		//float run = Mathf.Max(1.0f, inputData.run * runMultiplier);
+		//running
+		float run = 1.0f;
+		if (!m_properties.isPushed && m_properties.actionId == ActionTypes.NONE)
+		{
+			run = ProcessRun(inputData, timeStep);
+		}
+
+		//sliding
 		Vector3 slideDirection;
 		bool sliding = ProcessSliding(out slideDirection, run);
 
+		//moving
 		Vector3 moveDirection;
+		float forward = 0.0f;
+		float fallspeed = -m_settings.fallSpeed;
 		if (!m_properties.isPushed)
 		{
-			float jump = ProcessJump(inputData.jump, sliding, timeStep);
-			byte speedBonus = m_attributes.GetValue(Attributes.SPEED);
-			float speedMultiplier = 1.0f + 0.1f * Convert.ToSingle(speedBonus);
-
-			transform.Rotate(0, inputData.motionH * sensitivityX * timeStep, 0);
-
-			moveDirection = transform.rotation * new Vector3(
-				0.0f, 
-				jump - fallSpeed, 
-				inputData.motionV * walkSpeed * run * speedMultiplier
-				);
+			fallspeed += ProcessJump(inputData.jump, sliding, timeStep);
+			forward = ProcessMovement(inputData, run, timeStep);
 		}
-		else
-		{
-			moveDirection = new Vector3(0.0f, -fallSpeed, 0.0f);
-		}
+		moveDirection = transform.rotation * new Vector3(0.0f, fallspeed, forward);
+
+		//resulting movement
 		m_controller.Move((moveDirection + slideDirection + m_pushDirection) * timeStep);
+		//update stamina value (automatic synching is switched off due to client prediction)
+		m_properties.stamina = m_attributes.SyncSetValue(Attributes.STAMINA, m_properties.stamina);
 		m_properties.isGrounded = m_controller.isGrounded;
-		//if (m_properties.isPushed) Debug.Log(transform.position);
 	}
 
 	private bool m_lastAttack = false;
 	private bool m_lastUse = false;
 
-	private bool editorDebugdraw = false;
+	/*private bool editorDebugdraw = false;
 	private Vector3 fwd;
 	private Vector3 pos;
 	void OnDrawGizmos()
@@ -253,7 +258,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		editorDebugdraw = true;
 		yield return new WaitForSeconds(1.0f);
 		editorDebugdraw = false;
-	}
+	}*/
 
 	private GameObject target;
 	private bool activeAttackEvent = false;
@@ -277,7 +282,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 				else
 				{
 					//TODO: temporary implementation of projectile launcher
-					GameObject objProjectile = (GameObject)Instantiate(shot, m_launcher.position, m_launcher.rotation);
+					GameObject objProjectile = (GameObject)Instantiate(m_shot, m_launcher.position, m_launcher.rotation);
 					Projectile projectile = objProjectile.GetComponent<Projectile>();
 					if (projectile != null)
 					{
@@ -444,7 +449,7 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 			m_pushDirection = direction;
 			m_pushPosition = position;
 			m_pushTimer = Mathf.Max(0.0f, duration);
-			m_pushInhibition = c_pushDelay + Mathf.Max(0.0f, inhibition);
+			m_pushInhibition = m_settings.pushDelay + Mathf.Max(0.0f, inhibition);
 		}
 	}
 	
