@@ -1,0 +1,12 @@
+Copy existing folder for each instance.
+Delete following folders:
+Assets
+ProjectSettings
+
+replace them with hard links to original project (adjust pathes!):
+
+Run cmd as Admin
+mklink /d Assets e:\projects\unity\4lw2\Assets
+mklink /d ProjectSettings e:\projects\unity\4lw2\ProjectSettings
+
+don't put copied instances under version control!
