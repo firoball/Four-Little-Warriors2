@@ -1,0 +1,7 @@
+/.vs
+*.log
+/[Ll]ibrary
+/[Bb]uild
+/[Tt]emp
+/[Oo]bj
+/meta/*.blend1
