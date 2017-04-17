@@ -230,8 +230,8 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		m_properties.isGrounded = m_controller.isGrounded;
 	}
 
-	private bool m_lastAttack = false;
-	private bool m_lastUse = false;
+	//private bool m_lastAttack = false;
+	//private bool m_lastUse = false;
 
 	/*private bool editorDebugdraw = false;
 	private Vector3 fwd;
@@ -260,73 +260,156 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		editorDebugdraw = false;
 	}*/
 
-	private GameObject target;
-	private bool activeAttackEvent = false;
-	private bool activeUseEvent = false;
+	private GameObject m_target;
+	private bool m_activeAttackEvent = false;
+	private bool m_activeUseEvent = false;
 
-	public void ProcessActions(InputData inputData)
+	private void ProcessAttackTrigger()
 	{
 		RaycastHit hit;
-		if (!m_lastAttack)
+		Vector3 pos = GetComponent<Collider>().bounds.center;
+		Vector3 fwd = transform.TransformDirection(Vector3.forward);
+		if (Physics.SphereCast(pos, 2.0f, fwd, out hit, 4.0f)) //TODO: use real attack range
 		{
-			if (inputData.attack > 0.0f)
-			{
-				m_lastAttack = true;
-				Vector3 pos = GetComponent<Collider>().bounds.center;
-				Vector3 fwd = transform.TransformDirection(Vector3.forward);
-				if (Physics.SphereCast(pos, 2.0f, fwd, out hit, 4.0f)) //TODO: use real attack range
-				{
-					target = hit.transform.gameObject;
-					activeAttackEvent = true;
-				}
-				else
-				{
-					//TODO: temporary implementation of projectile launcher
-					GameObject objProjectile = (GameObject)Instantiate(m_shot, m_launcher.position, m_launcher.rotation);
-					Projectile projectile = objProjectile.GetComponent<Projectile>();
-					if (projectile != null)
-					{
-						byte damageLevel = m_attributes.GetValue(Attributes.DAMAGE);
-						byte damage = Convert.ToByte(4 + damageLevel * 2);
-						float range = 7.0f + Convert.ToSingle(m_attributes.GetValue(Attributes.RANGE)) * 1.5f;
-						projectile.Setup(damage, range, gameObject, Convert.ToInt32(damageLevel));
-					}
-					else
-					{
-						Debug.LogWarning("PlayerMovement: Spawned projectile misses Projectile component.");
-					}
-					//inform all clients about spawn if running on server, otherwise just spawn (local player only)
-					if (UnityEngine.Networking.NetworkServer.active)
-					{
-						UnityEngine.Networking.NetworkServer.Spawn(objProjectile);
-					}
-				}
-			}
+			m_target = hit.transform.gameObject;
+			m_activeAttackEvent = true;
 		}
 		else
 		{
-			if (inputData.attack <= 0.0f)
+			//TODO: temporary implementation of projectile launcher
+			GameObject objProjectile = (GameObject)Instantiate(m_shot, m_launcher.position, m_launcher.rotation);
+			Projectile projectile = objProjectile.GetComponent<Projectile>();
+			if (projectile != null)
 			{
-				m_lastAttack = false;
+				byte damageLevel = m_attributes.GetValue(Attributes.DAMAGE);
+				byte damage = Convert.ToByte(4 + damageLevel * 2);
+				float range = 7.0f + Convert.ToSingle(m_attributes.GetValue(Attributes.RANGE)) * 1.5f;
+				projectile.Setup(damage, range, gameObject, Convert.ToInt32(damageLevel));
+			}
+			else
+			{
+				Debug.LogWarning("PlayerMovement: Spawned projectile misses Projectile component.");
+			}
+			//inform all clients about spawn if running on server, otherwise just spawn (local player only)
+			if (UnityEngine.Networking.NetworkServer.active)
+			{
+				UnityEngine.Networking.NetworkServer.Spawn(objProjectile);
 			}
 		}
 	}
 
+	private void ProcessAttack(int index, InputData inputData, ActionTypes followerAttack, float timeStep)
+	{
+		//check whether attack trigger time was hit
+		float lastActionTimer = m_properties.actionTimer;
+		m_properties.actionTimer += timeStep;
+		if (lastActionTimer < m_settings.attackTrigger[index] && 
+		    m_properties.actionTimer > m_settings.attackTrigger[index]
+		    )
+		{
+			ProcessAttackTrigger();
+		}
+
+		//check whether combo trigger time was hit, combo is allowed and attack was performed
+		if (m_properties.actionTimer > m_settings.comboTrigger[index] && 
+		    m_attributes.GetValue(Attributes.COMBO) > index &&
+		    inputData.attack > 0.0f
+		    )
+		{
+			m_properties.actionTimer = 0.0f;
+			m_properties.actionId = followerAttack;
+		}
+
+		//check whether attack has finished
+		if (m_properties.actionTimer > m_settings.attackDuration[index])
+		{
+			m_properties.actionTimer = 0.0f;
+			m_properties.actionId = ActionTypes.NONE;
+		}
+	}
+
+	public void ProcessActions(InputData inputData, float timeStep)
+	{
+		switch (m_properties.actionId)
+		{
+		case ActionTypes.NONE:
+		{
+			//start timer to measure how long attack is pressed
+			if (inputData.attack > 0.0f)
+			{
+				Debug.Log("Attack is pressed "+m_properties.actionTimer );
+				m_properties.actionTimer += timeStep;
+			}
+			else
+			{
+				if (m_properties.actionTimer > 0.0f)
+				{
+					Debug.Log("Attack is released: "+m_properties.actionTimer );
+					//check how long attack was pressed and switch to proper attack
+					if (m_properties.actionTimer < 0.2f)
+					{
+						Debug.Log("Attack is triggered "+m_properties.actionTimer );
+						m_properties.actionId = ActionTypes.ATTACK1;
+					}
+					Debug.Log("Timer is Reset "+m_properties.actionTimer );
+					m_properties.actionTimer = 0.0f;
+				}
+			}
+			break;
+		}
+
+		case ActionTypes.ATTACK1:
+		{
+			ProcessAttack(0, inputData, ActionTypes.ATTACK2, timeStep);
+			break;
+		}
+
+		case ActionTypes.ATTACK2:
+		{
+			ProcessAttack(1, inputData, ActionTypes.ATTACK3, timeStep);
+			break;
+		}
+
+		case ActionTypes.ATTACK3:
+		{
+			ProcessAttack(2, inputData, ActionTypes.PUNCH, timeStep);
+			break;
+		}
+
+		case ActionTypes.PUNCH:
+		{
+			m_properties.actionTimer += timeStep;
+			if (m_properties.actionTimer > 2.0f) //temp
+			{
+				m_properties.actionTimer = 0.0f;
+				m_properties.actionId = ActionTypes.NONE;
+			}
+			break;
+		}
+
+		default:
+		{
+			break;
+		}
+		}
+
+	}
+
 	public void ProcessEvents()
 	{
-		if (activeAttackEvent || activeUseEvent)
+		if (m_activeAttackEvent || m_activeUseEvent)
 		{
-			Debug.Log(this.name+" hit: "+target.name);
+			Debug.Log(this.name+" hit: "+m_target.name);
 			//TODO: pick proper collider (filter isTrigger colliders)
-			if (activeAttackEvent)
+			if (m_activeAttackEvent)
 			{
-				ExecuteEvents.Execute<IObjectEventTarget>(target, null,(x,y)=>x.OnRaycastShot(this.GetComponent<Collider>()));
-				activeAttackEvent = false;
+				ExecuteEvents.Execute<IObjectEventTarget>(m_target, null,(x,y)=>x.OnRaycastShot(this.GetComponent<Collider>()));
+				m_activeAttackEvent = false;
 			}
-			if (activeUseEvent)
+			if (m_activeUseEvent)
 			{
-				ExecuteEvents.Execute<IObjectEventTarget>(target, null,(x,y)=>x.OnRaycastUse(this.GetComponent<Collider>()));
-				activeUseEvent = false;
+				ExecuteEvents.Execute<IObjectEventTarget>(m_target, null,(x,y)=>x.OnRaycastUse(this.GetComponent<Collider>()));
+				m_activeUseEvent = false;
 			}
 		}
 	}
@@ -342,7 +425,9 @@ public class PlayerMovement : MonoBehaviour, IPushEventTarget
 		float jumpCur = currentProps.jumpTimer;
 
 		m_properties = currentProps; //make sure all non interpolated properties are up to date
-		m_attributes.SyncSetValue(Attributes.STAMINA, m_properties.stamina);
+		//BUG: destroys local multiplayer stamina update on collect
+		//should never run on client owner, but this function here is shared...
+		//m_attributes.SyncSetValue(Attributes.STAMINA, m_properties.stamina);
 		if (!extrapolate)
 		{
 			time = Mathf.Min(time, 1.0f);

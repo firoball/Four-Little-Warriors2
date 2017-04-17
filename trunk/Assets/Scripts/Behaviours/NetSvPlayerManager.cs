@@ -77,16 +77,16 @@ public class NetSvPlayerManager : NetworkBehaviour
 		if ((inputData.attack > 0.0f) && m_attackReleased && !isClient)
 		{
 			m_attackReleased = false;
-
+			Debug.Log("attack");
 			LagCompensator.Rewind(gameObject, gameObject);//, connectionToClient);
-			m_movement.ProcessActions(m_input.GetInputData());
+			m_movement.ProcessActions(m_input.GetInputData(), Time.fixedDeltaTime);
 			LagCompensator.Restore(gameObject);
 
 			m_movement.ProcessEvents();
 		}
 		else
 		{
-			m_movement.ProcessActions(m_input.GetInputData());
+			m_movement.ProcessActions(m_input.GetInputData(), Time.fixedDeltaTime);
 			m_movement.ProcessEvents();
 		}
 		

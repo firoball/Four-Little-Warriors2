@@ -50,7 +50,16 @@ public class AnimationWrapper : MonoBehaviour
 		//connect to PlayerProperties
 		animator.SetBool("isJumping", (properties.jumpTimer > 0.0f));
 		animator.SetBool("isGrounded", properties.isGrounded);
-		animator.SetInteger("actionId", (int)properties.actionId);
+		//Debug.Log(properties.actionTimer+" "+properties.actionId);
+		if (properties.actionTimer == 0.0f)
+		{
+			//Debug.Log ("switch to "+properties.actionId);
+			animator.SetInteger("actionId", (int)properties.actionId);
+		}
+		else
+		{
+			animator.SetInteger("actionId", (int)ActionTypes.NONE);
+		}
 	}
 
 	private float Smooth(float move, ref float lastMove, ref float oldMove, ref float moveTimer)

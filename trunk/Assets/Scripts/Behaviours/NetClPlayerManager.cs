@@ -85,9 +85,11 @@ public class NetClPlayerManager : NetworkBehaviour
 				m_movement.SetProperties(cs.properties);
 			}
 //			m_movement.ProcessInputs(m_input.GetInputData(), Time.fixedDeltaTime);
-			if (!isServer || (isServer && isClient))
+			m_movement.ProcessActions(m_input.GetInputData(), Time.fixedDeltaTime); //local prediction of actions
+			if (/*!isServer ||*/ (isServer && isClient))
 			{
-				m_movement.ProcessActions(m_input.GetInputData()); //local prediction of actions
+				//m_movement.ProcessActions(m_input.GetInputData()); //local prediction of actions
+				m_movement.ProcessEvents();
 			}
 			m_movement.ProcessInputs(m_input.GetInputData(), Time.fixedDeltaTime);
 

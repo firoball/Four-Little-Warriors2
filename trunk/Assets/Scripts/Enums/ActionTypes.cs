@@ -9,6 +9,7 @@ public enum ActionTypes : byte
 	ATTACK3 = 3,
 	HIT = 4,
 	KNOCKBACK = 5,
+	PUNCH = 6,
 
-	COUNT = 6
+	COUNT = 7
 }
